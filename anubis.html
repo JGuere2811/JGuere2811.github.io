@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anubis — Demo interactiva</title>
+<meta name="description" content="Anubis: gestor de credenciales con cifrado de extremo a extremo, roles y métricas de Google Analytics para equipos que administran muchas webs. Demo con datos ficticios.">
+<meta property="og:title" content="Anubis — Demo interactiva">
+<meta property="og:description" content="Credenciales cifradas de extremo a extremo, roles y métricas de GA4 para agencias. Proyecto de Jose Manuel Güere.">
+<meta property="og:image" content="https://jguere2811.github.io/og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23d8b46a'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='Arial' font-weight='900' font-size='30' fill='%2316140c'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0a07; --bg-2:#110f0a; --card:#16140e; --card-2:#1d1a12; --line:rgba(255,236,190,.09); --line-2:rgba(255,236,190,.16);
+  --text:#f3efe4; --muted:#aaa48f; --dim:#7a7562; --gold:#d8b46a; --gold-2:#f0d08a; --green:#8fd694; --red:#f09595; --blue:#8fb8ff;
+  --display:"Bricolage Grotesque",Inter,system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+::selection{background:var(--gold);color:#16140c}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+
+/* top */
+.top{position:sticky;top:0;z-index:20;background:rgba(11,10,7,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.back{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:.9rem}
+.back:hover{color:var(--text)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:1.15rem}
+.brand i{width:32px;height:32px;border-radius:9px;background:var(--gold);color:#16140c;display:grid;place-items:center;font-style:normal}
+.pill{font-family:var(--mono);font-size:.72rem;padding:4px 10px;border-radius:999px;border:1px solid var(--line-2);color:var(--gold)}
+
+/* hero */
+.hero{position:relative;padding:90px 0 60px;overflow:hidden;text-align:center}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 70% 70% at 50% 30%,#000 20%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 30%,#000 20%,transparent 75%)}
+.glow{position:absolute;width:700px;height:420px;left:50%;top:-180px;transform:translateX(-50%);background:var(--gold);filter:blur(140px);opacity:.18;border-radius:50%}
+.hero .wrap{position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.78rem;color:var(--gold);border:1px solid var(--line-2);border-radius:999px;padding:6px 14px;background:rgba(216,180,106,.06)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2.4rem,6vw,4.6rem);line-height:1;letter-spacing:-.045em;margin:24px auto 18px;max-width:900px}
+h1 em{font-style:normal;color:var(--gold)}
+.lead{color:var(--muted);font-size:1.12rem;max-width:660px;margin:0 auto}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:28px}
+.chip{font-family:var(--mono);font-size:.76rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line-2);color:#e4dcc6}
+.notice{display:inline-flex;align-items:center;gap:10px;margin-top:26px;font-size:.88rem;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 16px}
+.notice b{color:var(--green);font-weight:600}
+
+/* demo */
+.demo-sec{padding:10px 0 90px}
+.app{background:var(--card);border:1px solid var(--line-2);border-radius:20px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 1px rgba(0,0,0,.5)}
+.chrome{display:flex;align-items:center;gap:7px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--bg-2)}
+.chrome i{width:10px;height:10px;border-radius:50%;background:#3a372c}
+.chrome i:nth-child(1){background:#ff5f57}.chrome i:nth-child(2){background:#febc2e}.chrome i:nth-child(3){background:#28c840}
+.chrome .url{margin-left:12px;flex:1;max-width:420px;background:rgba(255,255,255,.04);border-radius:7px;padding:4px 12px;font-family:var(--mono);font-size:.72rem;color:var(--dim)}
+.appbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 20px;border-bottom:1px solid var(--line)}
+.appbar .brand{font-size:1rem}.appbar .brand i{width:26px;height:26px;font-size:.8rem;border-radius:7px}
+.roles{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.roles small{color:var(--dim);font-size:.78rem}
+.seg{display:flex;background:var(--bg-2);border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{padding:6px 14px;border-radius:999px;font-size:.84rem;color:var(--muted);transition:.2s}
+.seg button.on{background:var(--gold);color:#16140c;font-weight:600}
+.who{padding:12px 20px;font-size:.86rem;color:var(--muted);border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.who b{color:var(--text)}
+.tag{font-family:var(--mono);font-size:.7rem;padding:2px 8px;border-radius:999px;border:1px solid var(--line-2);color:var(--gold)}
+.tabs{display:flex;gap:4px;padding:12px 20px 0;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{padding:10px 16px;font-size:.9rem;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button.on{color:var(--text);border-color:var(--gold)}
+.pane{padding:22px 20px 26px;min-height:420px}
+
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+select{font:inherit;font-size:.86rem;background:var(--bg-2);color:var(--text);border:1px solid var(--line-2);border-radius:10px;padding:7px 12px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi small{color:var(--dim);font-size:.78rem;display:block}
+.kpi b{font-family:var(--display);font-size:1.7rem;letter-spacing:-.03em;line-height:1.2}
+.kpi em{font-style:normal;font-size:.75rem;color:var(--green);margin-left:6px}
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:12px;margin-top:12px}
+.box{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.box h4{font-size:.8rem;color:var(--dim);font-weight:500;margin-bottom:10px}
+#chart{width:100%;height:190px;display:block}
+#chart rect{fill:var(--gold);transition:height .4s,y .4s}
+#chart rect:hover{fill:var(--gold-2)}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+td,th{padding:8px 4px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--dim);font-weight:500;font-size:.76rem}
+td.n,th.n{text-align:right;font-family:var(--mono)}
+.empty{display:grid;place-items:center;text-align:center;gap:10px;padding:60px 20px;color:var(--muted)}
+.empty .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(240,149,149,.1);color:var(--red);font-size:1.4rem}
+
+.co{margin-bottom:22px}
+.co h3{font-family:var(--display);font-size:1.15rem;letter-spacing:-.02em;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.co h3 span{font-family:var(--mono);font-size:.72rem;color:var(--dim);font-weight:400}
+.acc{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px}
+.acc .lk{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(216,180,106,.1);color:var(--gold)}
+.acc .lk svg{width:18px;height:18px}
+.acc b{display:block;font-size:.93rem}
+.acc small{color:var(--dim);font-size:.78rem}
+.acc .val{font-family:var(--mono);font-size:.78rem;color:var(--dim);letter-spacing:.1em}
+.perm{font-size:.76rem;font-weight:600;padding:5px 10px;border-radius:999px;white-space:nowrap}
+.perm.ok{background:rgba(143,214,148,.1);color:var(--green)}
+.perm.blind{background:rgba(143,184,255,.1);color:var(--blue)}
+.perm.no{background:rgba(240,149,149,.1);color:var(--red)}
+.btn-ver{font-size:.78rem;border:1px solid var(--line-2);border-radius:8px;padding:5px 10px;margin-left:8px;color:var(--muted)}
+.btn-ver:hover{color:var(--text);border-color:var(--gold)}
+.right{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:6px}
+
+.log{display:grid;gap:0}
+.ev{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:.88rem}
+.ev time{font-family:var(--mono);font-size:.76rem;color:var(--dim)}
+.ev b{font-weight:600}
+.ev .k{color:var(--gold)}
+
+@media (max-width:860px){.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.roles{margin-left:0;width:100%}}
+@media (max-width:520px){.acc{grid-template-columns:auto 1fr}.acc .right{grid-column:1/-1;justify-content:flex-start}.ev{grid-template-columns:1fr;gap:2px}.chrome .url{display:none}.seg button{padding:6px 10px;font-size:.8rem}}
+
+/* sections */
+section.info{padding:90px 0;border-top:1px solid var(--line)}
+.sh{max-width:720px;margin-bottom:46px}
+.lbl{font-family:var(--mono);font-size:.78rem;color:var(--gold);letter-spacing:.06em;margin-bottom:14px}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(2rem,4.5vw,3.2rem);line-height:1.04;letter-spacing:-.04em}
+h2 span{color:var(--dim)}
+.sh p{color:var(--muted);margin-top:16px;font-size:1.05rem}
+.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.feat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px}
+.feat .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(216,180,106,.1);color:var(--gold);margin-bottom:18px}
+.feat .ic svg{width:22px;height:22px}
+.feat h3{font-family:var(--display);font-size:1.2rem;letter-spacing:-.02em;margin-bottom:8px}
+.feat p{color:var(--muted);font-size:.93rem}
+@media (max-width:900px){.feats{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.feats{grid-template-columns:1fr}}
+.arch{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:30px;overflow-x:auto}
+.arch svg{display:block;width:100%;min-width:720px;height:auto}
+.flowdash{stroke-dasharray:6 6;animation:dash 1s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-12}}
+.role-table{width:100%;margin-top:14px}
+.role-table td,.role-table th{padding:12px 10px;font-size:.9rem}
+.role-table th{font-size:.8rem}
+.y{color:var(--green)}.b{color:var(--blue)}.x{color:var(--red)}
+.tw{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:8px 18px;overflow-x:auto}
+.tw table{min-width:560px}
+
+footer{border-top:1px solid var(--line);padding:50px 0;text-align:center;color:var(--muted)}
+footer h2{margin-bottom:14px}
+.cta{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;font-weight:600;font-size:.93rem;border:1px solid var(--line-2);transition:transform .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.gold{background:var(--gold);color:#16140c;border-color:var(--gold)}
+.small{font-size:.82rem;color:var(--dim);margin-top:30px}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);max-width:calc(100vw - 32px);background:var(--card-2);border:1px solid var(--gold);color:var(--text);font-size:.9rem;padding:12px 18px;border-radius:14px;opacity:0;transition:.3s;pointer-events:none;z-index:50;box-shadow:0 20px 40px rgba(0,0,0,.6)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <a class="back" href="./#proyectos">← Volver al portafolio</a>
+    <span class="brand"><i>A</i>Anubis</span>
+    <span class="pill">DEMO · DATOS FICTICIOS</span>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="glow"></div>
+  <div class="wrap">
+    <span class="eyebrow">● PROYECTO EN DESARROLLO · 2026</span>
+    <h1>Las credenciales y métricas de todas tus webs, <em>en un solo lugar.</em></h1>
+    <p class="lead">Anubis es un gestor para equipos que administran muchos sitios de varias empresas: credenciales <b style="color:var(--text);font-weight:500">cifradas de extremo a extremo</b>, permisos por rol y métricas diarias de Google Analytics.</p>
+    <div class="chips"><span class="chip">Cloudflare Workers</span><span class="chip">D1 · SQLite</span><span class="chip">WebCrypto · AES-256-GCM</span><span class="chip">GA4 Data API</span><span class="chip">Cloudflare Access</span><span class="chip">JavaScript</span><span class="chip">Node test</span></div>
+    <div class="notice">🔒 <span><b>Esta demo no contiene contraseñas.</b> Todo funciona en tu navegador, con datos inventados.</span></div>
+  </div>
+</header>
+
+<!-- ============ DEMO ============ -->
+<section class="demo-sec" id="demo">
+  <div class="wrap">
+    <div class="app">
+      <div class="chrome"><i></i><i></i><i></i><span class="url">anubis · panel</span></div>
+      <div class="appbar">
+        <span class="brand"><i>A</i>Anubis</span>
+        <div class="roles"><small>Ver como:</small>
+          <div class="seg" id="roles">
+            <button data-role="admin" class="on">Administrador</button>
+            <button data-role="owner">Propietario</button>
+            <button data-role="seo">SEO</button>
+          </div>
+        </div>
+      </div>
+      <div class="who" id="who"></div>
+      <div class="tabs" id="tabs">
+        <button data-tab="metricas" class="on">Métricas</button>
+        <button data-tab="webs">Webs y cuentas</button>
+        <button data-tab="actividad">Actividad</button>
+      </div>
+
+      <div class="pane" id="p-metricas">
+        <div class="filters">
+          <select id="f-dom" aria-label="Dominio"></select>
+          <select id="f-dias" aria-label="Periodo"><option value="7">Últimos 7 días</option><option value="30" selected>Últimos 30 días</option></select>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><small>Sesiones</small><b id="k-ses">0</b><em id="k-var"></em></div>
+          <div class="kpi"><small>Usuarios</small><b id="k-usr">0</b></div>
+          <div class="kpi"><small>Páginas vistas</small><b id="k-pv">0</b></div>
+          <div class="kpi"><small>Dominios visibles</small><b id="k-dom">0</b></div>
+        </div>
+        <div class="grid2">
+          <div class="box"><h4>Sesiones por día</h4><svg id="chart" viewBox="0 0 600 190" preserveAspectRatio="none"></svg></div>
+          <div class="box"><h4>Por dominio</h4><table><thead><tr><th>Dominio</th><th class="n">Sesiones</th></tr></thead><tbody id="t-dom"></tbody></table></div>
+        </div>
+      </div>
+
+      <div class="pane" id="p-webs" hidden></div>
+      <div class="pane" id="p-actividad" hidden></div>
+    </div>
+    <p style="text-align:center;color:var(--dim);font-size:.85rem;margin-top:16px">Cambia de rol arriba: cada persona ve solo lo que le corresponde. Así funcionan los permisos en la app real.</p>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="info">
+  <div class="wrap">
+    <div class="sh">
+      <div class="lbl">QUÉ RESUELVE</div>
+      <h2>Una agencia, muchas webs, <span>cero contraseñas por chat.</span></h2>
+      <p>Cuando un equipo administra decenas de sitios, las claves terminan en chats, hojas de cálculo y correos. Anubis las centraliza con reglas claras de quién ve qué.</p>
+    </div>
+    <div class="feats">
+      <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div><h3>Cifrado de extremo a extremo</h3><p>Las credenciales se cifran y descifran en el navegador. El servidor nunca las ve en claro.</p></div>
+      <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M21 20c0-2.6-1.6-4.9-4-5.7"/></svg></div><h3>Roles y permisos</h3><p>Administrador, propietario y SEO. Todo se comprueba en el servidor, y nadie crea cuentas de su mismo nivel.</p></div>
+      <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></div><h3>Métricas de GA4 diarias</h3><p>Una cuenta de servicio de solo lectura importa el tráfico de cada dominio cada día. El propietario decide qué comparte con su SEO.</p></div>
+      <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg></div><h3>Versiones y papelera</h3><p>Cada cambio guarda la versión anterior. Lo eliminado pasa 14 días en la papelera antes de borrarse.</p></div>
+      <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></div><h3>Anular un acceso al instante</h3><p>Al desactivar a alguien, su sesión se corta y Anubis lista las credenciales que consultó, para cambiarlas.</p></div>
+      <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5h11M9 12h11M9 19h11M4 5h.01M4 12h.01M4 19h.01"/></svg></div><h3>Registro de actividad</h3><p>Quién consultó, cambió o eliminó qué, y cuándo. Escrituras atómicas con control de versión.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROLES ============ -->
+<section class="info">
+  <div class="wrap">
+    <div class="sh">
+      <div class="lbl">MODELO DE PERMISOS</div>
+      <h2>El administrador gestiona, <span>pero no puede leer.</span></h2>
+      <p>Guardar no requiere poder leer: el administrador puede cambiar o eliminar una credencial de una empresa sin ver nunca su valor.</p>
+    </div>
+    <div class="tw">
+      <table class="role-table">
+        <thead><tr><th>Tipo de cuenta</th><th>Administrador</th><th>Propietario</th><th>SEO</th></tr></thead>
+        <tbody>
+          <tr><td>Hosting compartido</td><td class="y">Ve y gestiona</td><td class="x">No ve</td><td class="y">Ve y usa</td></tr>
+          <tr><td>Webs de la empresa</td><td class="b">Cambia sin leer</td><td class="y">Ve y gestiona</td><td class="y">Consulta</td></tr>
+          <tr><td>GA4, DNS, Search Console</td><td class="b">Cambia sin leer</td><td class="y">Gestiona</td><td class="y">Consulta</td></tr>
+          <tr><td>Cuentas propias del propietario</td><td class="b">Cambia sin leer</td><td class="y">Ve y gestiona</td><td class="x">No ve</td></tr>
+          <tr><td>Estadísticas de GA4</td><td class="y">Todas</td><td class="y">Sus empresas</td><td class="b">Solo las compartidas</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ARCH ============ -->
+<section class="info">
+  <div class="wrap">
+    <div class="sh">
+      <div class="lbl">ARQUITECTURA</div>
+      <h2>Serverless en el borde, <span>cifrado en el cliente.</span></h2>
+      <p>Un Worker de Cloudflare atiende el panel y la API sobre una base D1 (SQLite). Cada escritura es una transacción con guardas de versión: si otra persona cambió la fila, todo se revierte.</p>
+    </div>
+    <div class="arch">
+      <svg viewBox="0 0 900 300" font-family="Inter, sans-serif">
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d8b46a"/></marker></defs>
+        <g fill="none" stroke="#d8b46a" stroke-width="1.6" marker-end="url(#ar)">
+          <path class="flowdash" d="M190 110 H262"/><path class="flowdash" d="M420 110 H482"/><path class="flowdash" d="M680 110 H742"/>
+          <path class="flowdash" d="M580 236 V160"/>
+        </g>
+        <g>
+          <rect x="20" y="60" width="170" height="100" rx="16" fill="#1d1a12" stroke="rgba(255,236,190,.2)"/>
+          <text x="105" y="98" text-anchor="middle" font-size="15" font-weight="600" fill="#f3efe4">Navegador</text>
+          <text x="105" y="120" text-anchor="middle" font-size="11.5" fill="#aaa48f">cifra y descifra</text>
+          <text x="105" y="138" text-anchor="middle" font-size="11.5" fill="#d8b46a" font-family="JetBrains Mono">WebCrypto</text>
+
+          <rect x="264" y="60" width="156" height="100" rx="16" fill="#1d1a12" stroke="rgba(255,236,190,.2)"/>
+          <text x="342" y="102" text-anchor="middle" font-size="15" font-weight="600" fill="#f3efe4">Cloudflare</text>
+          <text x="342" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#f3efe4">Access</text>
+          <text x="342" y="142" text-anchor="middle" font-size="11.5" fill="#aaa48f">identidad por correo</text>
+
+          <rect x="484" y="40" width="196" height="140" rx="16" fill="#2a2416" stroke="#d8b46a"/>
+          <text x="582" y="74" text-anchor="middle" font-size="15" font-weight="700" fill="#f0d08a">Worker</text>
+          <text x="582" y="100" text-anchor="middle" font-size="11.5" fill="#e4dcc6">permisos por rol</text>
+          <text x="582" y="120" text-anchor="middle" font-size="11.5" fill="#e4dcc6">lecturas / escrituras</text>
+          <text x="582" y="140" text-anchor="middle" font-size="11.5" fill="#e4dcc6">reportes GA4</text>
+          <text x="582" y="160" text-anchor="middle" font-size="11.5" fill="#e4dcc6">auditoría</text>
+
+          <rect x="744" y="60" width="136" height="100" rx="16" fill="#1d1a12" stroke="rgba(255,236,190,.2)"/>
+          <text x="812" y="102" text-anchor="middle" font-size="15" font-weight="600" fill="#f3efe4">D1</text>
+          <text x="812" y="122" text-anchor="middle" font-size="11.5" fill="#aaa48f">SQLite relacional</text>
+          <text x="812" y="140" text-anchor="middle" font-size="11.5" fill="#aaa48f">solo datos cifrados</text>
+
+          <rect x="484" y="236" width="196" height="50" rx="14" fill="#1d1a12" stroke="rgba(255,236,190,.2)"/>
+          <text x="582" y="266" text-anchor="middle" font-size="12.5" fill="#e4dcc6">Cron diario → GA4 Data API</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h2>Diseñado y programado por <span style="color:var(--gold)">Jose Manuel Güere</span></h2>
+    <p>Proyecto personal en desarrollo. Esta página es una demo sin servidor: no guarda nada y no contiene contraseñas reales ni ficticias.</p>
+    <div class="cta">
+      <a class="btn gold" href="./#contacto">Hablemos de tu proyecto</a>
+      <a class="btn" href="./">Ver todo el portafolio</a>
+    </div>
+    <p class="small">© <span id="y"></span> Jose Manuel Güere Casas</p>
+  </div>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  // ---------- datos ficticios ----------
+  const EMP = {
+    Yolanda: { doms: ['mas.test', 'equipos.test'] },
+    Kamus:   { doms: ['diego.test', 'laverito.test'] }
+  };
+  const ROLES = {
+    admin: { name: 'Admin', email: 'admin@anubis.test', label: 'Administrador', desc: 'Gestiona todo el sistema', doms: ['mas.test','equipos.test','diego.test','laverito.test'], emps: ['Yolanda','Kamus'], log: true },
+    owner: { name: 'Juan', email: 'juan@anubis.test', label: 'Propietario', desc: 'Socio de Yolanda y Kamus', doms: ['mas.test','equipos.test','diego.test','laverito.test'], emps: ['Yolanda','Kamus'], log: true },
+    seo:   { name: 'Ana', email: 'ana@anubis.test', label: 'SEO', desc: 'Trabaja para Yolanda · Juan le compartió las métricas de mas.test', doms: ['mas.test'], emps: ['Yolanda'], log: false }
+  };
+  // cuentas: [nombre, detalle, tipo, empresa]  (sin valores: esta demo no tiene contraseñas)
+  const ACC = [
+    ['Hosting compartido', 'Panel del hosting · varios dominios', 'compartida', null],
+    ['WordPress · mas.test', 'Acceso de administrador del sitio', 'web', 'Yolanda'],
+    ['WordPress · equipos.test', 'Acceso de administrador del sitio', 'web', 'Yolanda'],
+    ['Google Analytics 4', 'Propiedad de la empresa', 'infra', 'Yolanda'],
+    ['Registrador del dominio', 'Cuenta propia de Juan', 'propia', 'Yolanda'],
+    ['WordPress · diego.test', 'Acceso de administrador del sitio', 'web', 'Kamus'],
+    ['DNS de la empresa', 'Zona DNS de Kamus', 'infra', 'Kamus'],
+  ];
+  const PERM = { // por tipo y rol: ok (ve), blind (cambia sin leer), no (no ve)
+    compartida: { admin: 'ok', owner: 'no', seo: 'ok' },
+    web:        { admin: 'blind', owner: 'ok', seo: 'ok' },
+    infra:      { admin: 'blind', owner: 'ok', seo: 'ok' },
+    propia:     { admin: 'blind', owner: 'ok', seo: 'no' }
+  };
+  const PERM_TXT = { ok: 'Puede ver', blind: 'Cambia sin leer', no: 'No ve' };
+
+  // series deterministas por dominio
+  const rnd = s => () => (s = (s * 16807) % 2147483647) / 2147483647;
+  const SERIES = {};
+  Object.values(EMP).flatMap(e => e.doms).forEach((d, i) => {
+    const r = rnd(1000 + i * 977), base = [520, 260, 340, 180][i];
+    SERIES[d] = Array.from({ length: 60 }, (_, k) => Math.round(base * (0.75 + r() * 0.5) * (1 + k / 160) * ([0,6].includes((k + 2) % 7) ? 0.7 : 1)));
+  });
+
+  let role = 'admin', tab = 'metricas';
+  const $ = id => document.getElementById(id);
+  const fmt = n => n >= 10000 ? (n / 1000).toFixed(1) + 'k' : n.toLocaleString('es-PE');
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+
+  function renderWho() {
+    const r = ROLES[role], w = $('who'); w.textContent = '';
+    w.append('Sesión de ', el('b', null, r.name), ' ', el('span', 'tag', r.label), ' ', el('span', null, '· ' + r.desc));
+  }
+
+  function renderMetrics() {
+    const r = ROLES[role], sel = $('f-dom'), prev = sel.value;
+    sel.textContent = '';
+    sel.append(new Option(r.doms.length > 1 ? 'Todos mis dominios' : r.doms[0], ''));
+    if (r.doms.length > 1) r.doms.forEach(d => sel.append(new Option(d, d)));
+    if (r.doms.includes(prev)) sel.value = prev;
+    const doms = sel.value ? [sel.value] : r.doms, days = +$('f-dias').value;
+    const sum = Array.from({ length: days }, (_, i) => doms.reduce((a, d) => a + SERIES[d][60 - days + i], 0));
+    const prevSum = doms.reduce((a, d) => a + SERIES[d].slice(60 - 2 * days, 60 - days).reduce((x, y) => x + y, 0), 0);
+    const tot = sum.reduce((a, b) => a + b, 0);
+    $('k-ses').textContent = fmt(tot);
+    const v = prevSum ? ((tot - prevSum) / prevSum * 100) : 0;
+    $('k-var').textContent = (v >= 0 ? '▲ ' : '▼ ') + Math.abs(v).toFixed(0) + '%';
+    $('k-var').style.color = v >= 0 ? 'var(--green)' : 'var(--red)';
+    $('k-usr').textContent = fmt(Math.round(tot * 0.72));
+    $('k-pv').textContent = fmt(Math.round(tot * 2.4));
+    $('k-dom').textContent = doms.length;
+    // chart
+    const svg = $('chart'), max = Math.max(...sum) * 1.1, W = 600, H = 190, gap = days > 10 ? 4 : 10, bw = (W - gap * (days - 1)) / days;
+    svg.textContent = '';
+    sum.forEach((val, i) => {
+      const h = val / max * (H - 6), rc = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rc.setAttribute('x', i * (bw + gap)); rc.setAttribute('y', H - h); rc.setAttribute('width', bw); rc.setAttribute('height', h); rc.setAttribute('rx', 3);
+      const t = document.createElementNS('http://www.w3.org/2000/svg', 'title'); t.textContent = val + ' sesiones'; rc.append(t);
+      svg.append(rc);
+    });
+    // table
+    const tb = $('t-dom'); tb.textContent = '';
+    r.doms.map(d => [d, SERIES[d].slice(60 - days).reduce((a, b) => a + b, 0)]).sort((a, b) => b[1] - a[1]).forEach(([d, n]) => {
+      const tr = el('tr'); tr.append(el('td', null, d), el('td', 'n', fmt(n))); tb.append(tr);
+    });
+  }
+
+  const lockSvg = () => { const s = el('span', 'lk'); s.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>'; return s; };
+
+  function renderWebs() {
+    const p = $('p-webs'), r = ROLES[role]; p.textContent = '';
+    const groups = [['Cuentas compartidas', ACC.filter(a => !a[3])], ...r.emps.map(e => [e, ACC.filter(a => a[3] === e)])];
+    groups.forEach(([title, list]) => {
+      const vis = list.filter(a => PERM[a[2]][role] !== 'no');
+      const hidden = list.length - vis.length;
+      const co = el('div', 'co'), h = el('h3', null, title);
+      if (EMP[title]) h.append(el('span', null, EMP[title].doms.join(' · ')));
+      co.append(h);
+      vis.forEach(([n, d, t]) => {
+        const p = PERM[t][role], row = el('div', 'acc'), mid = el('div'), right = el('div', 'right');
+        mid.append(el('b', null, n), el('small', null, d));
+        right.append(el('span', 'val', '•••••••• cifrado'), el('span', 'perm ' + p, PERM_TXT[p]));
+        const b = el('button', 'btn-ver', p === 'ok' ? 'Ver' : 'Cambiar');
+        b.onclick = () => toast(p === 'ok'
+          ? 'En la app real, la credencial se descifra en tu navegador. Esta demo no contiene contraseñas.'
+          : 'El administrador puede reemplazar esta credencial sin poder leerla nunca.');
+        right.append(b);
+        row.append(lockSvg(), mid, right); co.append(row);
+      });
+      if (hidden) co.append(el('p', null, '+ ' + hidden + (hidden > 1 ? ' cuentas que' : ' cuenta que') + ' no puedes ver con este rol')), co.lastChild.style.cssText = 'color:var(--red);font-size:.82rem;margin-top:4px';
+      if (!list.length) return;
+      p.append(co);
+    });
+  }
+
+  function renderLog() {
+    const p = $('p-actividad'); p.textContent = '';
+    if (!ROLES[role].log) {
+      const e = el('div', 'empty'); e.append(el('div', 'ic', '⦸'), el('b', null, 'Sin acceso'), el('span', null, 'El SEO no ve el registro de actividad. Solo el administrador y los propietarios de cada empresa.'));
+      p.append(e); return;
+    }
+    const evs = [
+      ['hoy 09:42', 'Ana', 'consultó', 'WordPress · mas.test'],
+      ['hoy 09:15', 'Juan', 'compartió las métricas de', 'mas.test con Ana'],
+      ['ayer 18:03', 'Admin', 'cambió (sin leer)', 'DNS de la empresa · Kamus'],
+      ['ayer 11:27', 'Juan', 'envió a la papelera', 'WordPress · antiguo.test'],
+      ['lun 16:50', 'Admin', 'creó la cuenta SEO de', 'Ana en Yolanda'],
+      ['lun 08:00', 'Sistema', 'importó las métricas diarias de', 'GA4 · 4 dominios']
+    ].filter(e => role === 'admin' || !e[3].includes('Kamus'));
+    const log = el('div', 'log');
+    evs.forEach(([t, who, act, what]) => {
+      const r = el('div', 'ev'), d = el('div');
+      d.append(el('b', null, who), ' ' + act + ' ', el('span', 'k', what));
+      r.append(el('time', null, t), d); log.append(r);
+    });
+    p.append(log);
+  }
+
+  function render() {
+    renderWho();
+    ['metricas', 'webs', 'actividad'].forEach(t => $('p-' + t).hidden = t !== tab);
+    if (tab === 'metricas') renderMetrics();
+    if (tab === 'webs') renderWebs();
+    if (tab === 'actividad') renderLog();
+  }
+
+  $('roles').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    role = b.dataset.role;
+    [...$('roles').children].forEach(x => x.classList.toggle('on', x === b));
+    $('f-dom').value = ''; render();
+  });
+  $('tabs').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    tab = b.dataset.tab;
+    [...$('tabs').children].forEach(x => x.classList.toggle('on', x === b));
+    render();
+  });
+  $('f-dom').onchange = renderMetrics; $('f-dias').onchange = renderMetrics;
+
+  let tt; const toast = msg => { const t = $('toast'); t.textContent = '🔒 ' + msg; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 3200); };
+  $('y').textContent = new Date().getFullYear();
+  render();
+})();
+</script>
+</body>
+</html>

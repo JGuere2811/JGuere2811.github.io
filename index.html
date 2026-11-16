@@ -179,6 +179,12 @@ h2 .soft{color:var(--dim)}
 .case{display:grid;grid-template-columns:1.15fr 1fr;gap:0;background:var(--card);border:1px solid var(--line);border-radius:28px;overflow:hidden}
 .case:nth-child(even) .visual{order:2}
 .visual{position:relative;min-height:400px;display:grid;place-items:center;padding:40px;overflow:hidden}
+.v0{background:radial-gradient(90% 90% at 30% 10%,rgba(216,180,106,.25),transparent 60%),#100e08}
+.anx{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,236,190,.1);border-radius:10px;padding:9px 11px;font-size:.78rem}
+.anx i{font-style:normal;font-size:.8rem}
+.anx small{display:block;color:#7a7562;font-family:var(--mono);font-size:.64rem}
+.anx em{font-style:normal;font-size:.66rem;font-weight:600;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.anx .ok{background:rgba(143,214,148,.12);color:#8fd694}.anx .no{background:rgba(240,149,149,.12);color:#f09595}
 .v1{background:radial-gradient(90% 90% at 20% 10%,rgba(77,163,255,.28),transparent 60%),#0d1117}
 .v2{background:radial-gradient(90% 90% at 80% 10%,rgba(200,255,77,.18),transparent 60%),#0d0f0a}
 .v3{background:radial-gradient(90% 90% at 30% 90%,rgba(255,107,154,.25),transparent 60%),#120b0f}
@@ -459,6 +465,33 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
     </div>
 
     <div class="cases">
+      <!-- 0: Anubis -->
+      <article class="case rv">
+        <div class="visual v0">
+          <div class="browser" style="border-color:rgba(216,180,106,.3)">
+            <div class="bar"><i></i><i></i><i></i><span class="url">anubis · panel</span></div>
+            <div style="padding:14px;display:grid;gap:9px">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:#aaa48f"><b style="color:#f3efe4;font-family:var(--display);font-size:.9rem">🔒 Webs y cuentas</b><span style="border:1px solid rgba(216,180,106,.4);color:#d8b46a;border-radius:999px;padding:1px 8px">SEO</span></div>
+              <div class="anx"><i>🔒</i><span>Hosting compartido<small>•••••••• cifrado</small></span><em class="ok">Puede ver</em></div>
+              <div class="anx"><i>🔒</i><span>WordPress · mas.test<small>•••••••• cifrado</small></span><em class="ok">Puede ver</em></div>
+              <div class="anx"><i>🔒</i><span>Registrador del dominio<small>cuenta propia del propietario</small></span><em class="no">No ve</em></div>
+            </div>
+          </div>
+        </div>
+        <div class="info">
+          <div class="meta"><span>01 — PROYECTO PROPIO · 2026</span><span class="award" style="background:rgba(216,180,106,.12);color:#d8b46a;border-color:rgba(216,180,106,.3)">En desarrollo</span></div>
+          <h3>Anubis: credenciales cifradas y métricas para agencias</h3>
+          <dl>
+            <dt>Reto</dt><dd>Los equipos que administran muchas webs terminan pasándose las contraseñas por chat, sin control de quién ve qué.</dd>
+            <dt>Solución</dt><dd>Una app con cifrado de extremo a extremo en el navegador, permisos por rol (admin, propietario, SEO), métricas diarias de GA4, versiones y papelera. Corre sin servidores propios en Cloudflare Workers + D1.</dd>
+          </dl>
+          <div class="chips"><span class="chip">Cloudflare Workers</span><span class="chip">D1</span><span class="chip">WebCrypto</span><span class="chip">GA4 API</span></div>
+          <a href="anubis.html" class="btn lime" style="margin-top:24px;align-self:flex-start">Probar la demo interactiva
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+          </a>
+        </div>
+      </article>
+
       <!-- 1 -->
       <article class="case rv">
         <div class="visual v1">
@@ -483,7 +516,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
           </div>
         </div>
         <div class="info">
-          <div class="meta"><span>01 — FREELANCE · 2026</span></div>
+          <div class="meta"><span>02 — FREELANCE · 2026</span></div>
           <h3>Sitio web + reportes de tráfico en Power BI</h3>
           <dl>
             <dt>Reto</dt><dd>Mantener el sitio del cliente al día y saber qué tráfico y qué anuncios realmente funcionan.</dd>
@@ -517,7 +550,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
           </div>
         </div>
         <div class="info">
-          <div class="meta"><span>02 — GRUPO PAMD · 2024–2025</span></div>
+          <div class="meta"><span>03 — GRUPO PAMD · 2024–2025</span></div>
           <h3>Automatización de registros operativos con IA</h3>
           <dl>
             <dt>Reto</dt><dd>La información operativa llegaba por chats de WhatsApp: dispersa, desordenada y difícil de analizar.</dd>
@@ -541,7 +574,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
           </svg>
         </div>
         <div class="info">
-          <div class="meta"><span>03 — UNIVERSIDAD CONTINENTAL · 2024</span><span class="award">🏆 1.er puesto</span></div>
+          <div class="meta"><span>04 — UNIVERSIDAD CONTINENTAL · 2024</span><span class="award">🏆 1.er puesto</span></div>
           <h3>Simulador de cirugía con realidad virtual</h3>
           <dl>
             <dt>Reto</dt><dd>Los estudiantes de Medicina tienen pocas oportunidades de practicar cirugías complejas, como un trasplante de corazón.</dd>
@@ -569,7 +602,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
           </svg>
         </div>
         <div class="info">
-          <div class="meta"><span>04 — GRUPO PAMD · 2024–2025</span></div>
+          <div class="meta"><span>05 — GRUPO PAMD · 2024–2025</span></div>
           <h3>Redes corporativas y soporte TI</h3>
           <dl>
             <dt>Reto</dt><dd>Clientes que necesitaban redes estables y conectadas entre sedes, y usuarios con incidencias críticas que resolver a tiempo.</dd>
