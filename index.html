@@ -3,379 +3,738 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jose Manuel Güere</title>
-<meta name="description" content="Jose Manuel Güere Casas — Analista de Datos & BI, Automatización con IA e Infraestructura TI. Huancayo, Perú.">
+<title>Jose Manuel Güere — Diseño web & Datos</title>
+<meta name="description" content="Diseñador web y analista de datos. Sitios en WordPress y HTML/CSS, dashboards en Power BI y automatizaciones con IA. Huancayo, Perú — disponible remoto.">
+<meta name="theme-color" content="#09090b">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jguere2811.github.io/">
+<meta property="og:title" content="Jose Manuel Güere — Diseño web & Datos">
+<meta property="og:description" content="Sitios web, dashboards y automatizaciones con IA que convierten datos en resultados.">
+<meta property="og:image" content="https://jguere2811.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c8ff4d'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial' font-weight='900' font-size='26' fill='%2309090b'%3EJM%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f7f8fb; --surface:#ffffff; --surface-2:#eef1f7; --text:#0f172a; --muted:#5b6478;
-  --line:#e2e6ef; --accent:#2563eb; --accent-2:#0ea5a4; --accent-soft:#e0e9ff; --shadow:0 1px 2px rgba(15,23,42,.05),0 8px 24px rgba(15,23,42,.06);
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0b1020; --surface:#121a2e; --surface-2:#18223a; --text:#e7ecf6; --muted:#97a3bb;
-    --line:#223052; --accent:#6aa0ff; --accent-2:#2dd4bf; --accent-soft:#1a2a4d; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0b1020; --surface:#121a2e; --surface-2:#18223a; --text:#e7ecf6; --muted:#97a3bb;
-  --line:#223052; --accent:#6aa0ff; --accent-2:#2dd4bf; --accent-soft:#1a2a4d; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+  --bg:#09090b; --bg-2:#0f0f12; --card:#131317; --card-2:#1a1a20; --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+  --text:#f4f4f5; --muted:#a1a1aa; --dim:#71717a;
+  --lime:#c8ff4d; --violet:#8b7cff; --blue:#4da3ff; --pink:#ff6b9a;
+  --r:20px; --display:"Bricolage Grotesque",Inter,system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
-a{color:inherit}
-.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
-.mono{font-family:"JetBrains Mono",monospace;font-size:.8rem;letter-spacing:.04em}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--lime);color:#000}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+.lime{color:var(--lime)}
+#progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--lime);z-index:100}
 
-/* nav */
-nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
-.logo{font-weight:800;text-decoration:none;letter-spacing:-.02em}
-.logo span{color:var(--accent)}
-.links{display:flex;gap:22px;align-items:center}
-.links a{text-decoration:none;color:var(--muted);font-size:.92rem;font-weight:500}
-.links a:hover{color:var(--text)}
-.theme{background:var(--surface);border:1px solid var(--line);color:var(--text);border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:1rem}
-@media (max-width:760px){.links a{display:none}}
+/* ---------- NAV ---------- */
+nav{position:fixed;inset:0 0 auto 0;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+nav.solid{background:rgba(9,9,11,.75);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px;gap:20px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:1.1rem;letter-spacing:-.02em}
+.logo i{width:34px;height:34px;border-radius:10px;background:var(--lime);color:#09090b;display:grid;place-items:center;font-style:normal;font-size:.85rem}
+.menu{display:flex;gap:4px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:999px;padding:5px}
+.menu a{padding:7px 15px;border-radius:999px;font-size:.88rem;color:var(--muted);transition:.2s}
+.menu a:hover{color:var(--text);background:rgba(255,255,255,.06)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:999px;font-weight:600;font-size:.95rem;border:1px solid var(--line-2);transition:transform .2s,background .2s,border-color .2s;cursor:pointer;background:none;color:var(--text);font-family:inherit}
+.btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3)}
+.btn.lime{background:var(--lime);color:#09090b;border-color:var(--lime)}
+.btn.lime:hover{background:#d6ff75}
+.btn svg{width:18px;height:18px;flex:none}
+.btn.sm{padding:9px 16px;font-size:.88rem}
+@media (max-width:900px){.menu{display:none}}
 
-/* hero */
-.hero{padding:88px 0 64px}
-.badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--accent);padding:6px 12px;border-radius:999px;font-weight:600;font-size:.82rem}
-.dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.2)}
-h1{font-size:clamp(2.2rem,6vw,3.8rem);line-height:1.08;letter-spacing:-.035em;margin:20px 0 14px;font-weight:800}
-h1 .grad{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{font-size:1.15rem;color:var(--muted);max-width:640px}
-.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:10px;font-weight:600;text-decoration:none;font-size:.95rem;border:1px solid var(--line);background:var(--surface);transition:transform .15s}
-.btn:hover{transform:translateY(-2px)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.btn svg{width:18px;height:18px}
+/* ---------- HERO ---------- */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:120px 0 70px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,#000 30%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,#000 30%,transparent 75%);opacity:.6}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.35;pointer-events:none}
+.orb.a{width:520px;height:520px;background:var(--violet);top:-160px;right:-120px}
+.orb.b{width:420px;height:420px;background:var(--lime);bottom:-220px;left:-140px;opacity:.16}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center;width:100%}
+.avail{display:inline-flex;align-items:center;gap:10px;padding:7px 14px 7px 10px;border:1px solid var(--line-2);border-radius:999px;font-size:.85rem;color:var(--muted);background:rgba(255,255,255,.03)}
+.pulse{width:9px;height:9px;border-radius:50%;background:var(--lime);position:relative}
+.pulse::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--lime);animation:ping 1.8s infinite}
+@keyframes ping{to{transform:scale(2.8);opacity:0}}
+.hello{margin:26px 0 10px;color:var(--muted);font-size:1.05rem}
+.hello b{color:var(--text);font-weight:600}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2.6rem,6.2vw,5.1rem);line-height:.98;letter-spacing:-.045em}
+.rot{display:inline-grid;vertical-align:top}
+.rot span{grid-area:1/1;color:var(--lime);opacity:0;transform:translateY(40%);transition:opacity .5s,transform .5s;white-space:nowrap}
+.rot span.on{opacity:1;transform:none;transition-delay:.28s}
+.rot span.out{opacity:0;transform:translateY(-40%);transition-duration:.25s}
+h1 .soft{color:var(--muted)}
+.sub{margin-top:24px;font-size:1.12rem;color:var(--muted);max-width:540px}
+.sub b{color:var(--text);font-weight:500}
+.hero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.socials{display:flex;gap:10px;margin-top:30px;align-items:center;color:var(--dim);font-size:.85rem}
+.socials a{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);transition:.2s}
+.socials a:hover{color:var(--lime);border-color:var(--lime)}
+.socials svg{width:17px;height:17px}
 
-/* stats */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:56px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
-.stat b{display:block;font-size:2rem;letter-spacing:-.03em;font-weight:800;color:var(--accent)}
-.stat span{color:var(--muted);font-size:.88rem}
-@media (max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+/* hero visual */
+.stage{position:relative;height:540px}
+.win{position:absolute;background:linear-gradient(180deg,var(--card-2),var(--card));border:1px solid var(--line-2);border-radius:18px;box-shadow:0 30px 60px -20px rgba(0,0,0,.7),0 0 0 1px rgba(0,0,0,.4);overflow:hidden;transition:transform .25s ease-out}
+.bar{display:flex;align-items:center;gap:6px;padding:11px 14px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:.72rem;color:var(--dim)}
+.bar i{width:9px;height:9px;border-radius:50%;background:#3f3f46}
+.bar i:nth-child(1){background:#ff5f57}.bar i:nth-child(2){background:#febc2e}.bar i:nth-child(3){background:#28c840}
+.bar span{margin-left:8px}
+.w-dash{top:10px;left:8%;width:84%;z-index:1}
+.w-code{bottom:30px;left:0;width:54%;z-index:2}
+.w-flow{bottom:0;right:0;width:58%;z-index:3}
+.dash{padding:16px;display:grid;gap:12px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kpi{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.kpi small{display:block;font-size:.68rem;color:var(--dim)}
+.kpi b{font-family:var(--display);font-size:1.25rem;letter-spacing:-.02em}
+.kpi em{font-style:normal;font-size:.68rem;color:var(--lime);margin-left:4px}
+.charts{display:grid;grid-template-columns:2fr 1fr;gap:10px}
+.chart{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.chart small{font-size:.68rem;color:var(--dim)}
+.chart svg{display:block;width:100%;height:auto;margin-top:6px}
+.draw{stroke-dasharray:600;stroke-dashoffset:600;animation:draw 2.4s .4s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.bars{display:flex;align-items:flex-end;gap:5px;height:74px;margin-top:8px}
+.bars i{flex:1;border-radius:4px 4px 2px 2px;background:var(--violet);transform-origin:bottom;animation:grow 1.2s cubic-bezier(.2,.8,.2,1) both}
+.bars i:nth-child(even){background:#5b4fd1}
+@keyframes grow{from{transform:scaleY(0)}}
+.demo{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:.62rem;color:var(--dim);border:1px solid var(--line);padding:2px 7px;border-radius:999px}
+pre.code{padding:14px 16px;font-family:var(--mono);font-size:.74rem;line-height:1.75;color:#d4d4d8;white-space:pre;overflow:hidden}
+.t{color:var(--pink)}.a{color:var(--blue)}.s{color:var(--lime)}.c{color:var(--dim)}
+.caret{display:inline-block;width:7px;height:14px;background:var(--lime);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.flow{padding:18px 16px 16px}
+.flow small{font-size:.68rem;color:var(--dim);display:block;margin-bottom:12px}
+.nodes{position:relative;display:flex;justify-content:space-between;align-items:center}
+.nodes::before{content:"";position:absolute;left:18px;right:18px;top:50%;border-top:1.5px dashed var(--line-2)}
+.node{position:relative;z-index:1;display:grid;justify-items:center;gap:6px;font-size:.66rem;color:var(--muted)}
+.node b{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-family:var(--mono);font-size:.7rem;color:#09090b}
+.packet{position:absolute;top:calc(50% - 4px);left:18px;width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 14px var(--lime);animation:travel 3s linear infinite;z-index:2;margin-top:-11px}
+@keyframes travel{to{left:calc(100% - 26px)}}
+.status{margin-top:14px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.68rem;color:var(--lime)}
 
-/* sections */
-section{padding:64px 0}
-.eyebrow{color:var(--accent);margin-bottom:8px;display:block}
-h2{font-size:clamp(1.6rem,3.5vw,2.2rem);letter-spacing:-.03em;margin-bottom:28px;font-weight:800}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:var(--shadow)}
+@media (max-width:960px){
+  .hero{min-height:auto;padding-top:110px}
+  .hero .wrap{grid-template-columns:1fr;gap:40px}
+  .stage{height:480px;max-width:600px;width:100%;margin:0 auto}
+}
+@media (max-width:560px){
+  .stage{height:auto;display:grid;gap:14px}
+  .win{position:relative;inset:auto;width:100%!important}
+  .w-code,.demo{display:none}
+}
 
-.about{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
-.about p{color:var(--muted);margin-bottom:12px}
-.about p strong{color:var(--text)}
-.facts{list-style:none;display:grid;gap:14px}
-.facts li{display:flex;gap:12px;align-items:flex-start}
-.facts .k{color:var(--muted);font-size:.85rem;display:block}
-@media (max-width:760px){.about{grid-template-columns:1fr}}
+/* ---------- STATS / MARQUEE ---------- */
+.stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg-2)}
+.stats .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{padding:30px 24px;border-left:1px solid var(--line)}
+.stat:first-child{border-left:none}
+.stat b{display:block;white-space:nowrap;font-family:var(--display);font-size:clamp(1.7rem,4vw,2.8rem);letter-spacing:-.04em;line-height:1}
+.stat > span{display:block;margin-top:8px;color:var(--muted);font-size:.9rem}
+@media (max-width:760px){.stats .wrap{grid-template-columns:1fr 1fr}.stat:nth-child(3){border-left:none}.stat:nth-child(n+3){border-top:1px solid var(--line)}}
+.marquee{overflow:hidden;padding:26px 0;border-bottom:1px solid var(--line);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.track{display:flex;gap:44px;width:max-content;animation:scroll 40s linear infinite}
+.track span{font-family:var(--display);font-weight:700;font-size:1.5rem;color:var(--dim);display:flex;align-items:center;gap:44px;white-space:nowrap}
+.track span::after{content:"✦";color:var(--lime);font-size:.9rem}
+@keyframes scroll{to{transform:translateX(-50%)}}
 
-.skills{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.skills h3{font-size:1.05rem;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-.skills p{color:var(--muted);font-size:.9rem;margin-bottom:14px}
-.ic{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
-.ic svg{width:20px;height:20px}
-.tags{display:flex;flex-wrap:wrap;gap:8px}
-.tag{background:var(--surface-2);border:1px solid var(--line);padding:5px 10px;border-radius:8px;font-size:.82rem;font-weight:500}
-@media (max-width:860px){.skills{grid-template-columns:1fr}}
+/* ---------- SECTIONS ---------- */
+section{padding:120px 0}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:56px;flex-wrap:wrap}
+.label{font-family:var(--mono);font-size:.8rem;color:var(--lime);letter-spacing:.06em;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.label::before{content:"";width:24px;height:1px;background:var(--lime)}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem,5vw,3.8rem);line-height:1.02;letter-spacing:-.04em;max-width:760px}
+h2 .soft{color:var(--dim)}
+.head p{color:var(--muted);max-width:380px}
 
-/* timeline */
-.tl{position:relative;display:grid;gap:18px}
-.job{display:grid;grid-template-columns:200px 1fr;gap:24px}
-.job .when{color:var(--muted);padding-top:4px}
-.job h3{font-size:1.15rem;letter-spacing:-.01em}
-.job .org{color:var(--accent);font-weight:600;margin-bottom:12px;display:block}
-.job ul{list-style:none;display:grid;gap:10px}
-.job li{padding-left:20px;position:relative;color:var(--muted)}
-.job li::before{content:"";position:absolute;left:0;top:.65em;width:8px;height:8px;border-radius:2px;background:var(--accent-2)}
-.job li strong{color:var(--text)}
-@media (max-width:760px){.job{grid-template-columns:1fr;gap:6px}}
+/* services bento */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.svc{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:30px;overflow:hidden;transition:border-color .3s,transform .3s}
+.svc:hover{border-color:var(--line-2);transform:translateY(-4px)}
+.svc.w4{grid-column:span 4}.svc.w2{grid-column:span 2}
+.svc .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;margin-bottom:22px;background:rgba(200,255,77,.1);color:var(--lime)}
+.svc .ico svg{width:24px;height:24px}
+.svc h3{font-family:var(--display);font-size:1.45rem;letter-spacing:-.025em;line-height:1.15;margin-bottom:10px}
+.svc p{color:var(--muted);font-size:.95rem}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px}
+.chip{font-size:.78rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line-2);color:#d4d4d8;font-family:var(--mono)}
+.svc.feature{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;background:radial-gradient(120% 120% at 100% 0%,rgba(139,124,255,.18),transparent 55%),var(--card)}
+.mini{background:#0c0c0f;border:1px solid var(--line-2);border-radius:14px;overflow:hidden}
+.mini .pg{padding:14px;display:grid;gap:9px}
+.mini .ln{height:8px;border-radius:4px;background:rgba(255,255,255,.08)}
+.mini .hero-blk{height:64px;border-radius:10px;background:linear-gradient(120deg,var(--violet),var(--blue));display:flex;align-items:flex-end;padding:9px}
+.mini .hero-blk i{width:46%;height:8px;border-radius:4px;background:rgba(255,255,255,.85)}
+.mini .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mini .cols i{height:38px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.mini .btnl{width:34%;height:16px;border-radius:999px;background:var(--lime)}
+@media (max-width:960px){.svc.w4,.svc.w2{grid-column:span 6}.svc.feature{grid-template-columns:1fr}}
 
-/* projects */
-.projects{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.proj{display:flex;flex-direction:column;gap:10px}
-.proj .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.proj h3{font-size:1.1rem;letter-spacing:-.01em}
-.proj p{color:var(--muted);font-size:.93rem;flex:1}
-.ribbon{font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:999px;background:#fef3c7;color:#92400e;white-space:nowrap}
-:root[data-theme="dark"] .ribbon{background:#3b2f0b;color:#fcd34d}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ribbon{background:#3b2f0b;color:#fcd34d}}
-.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.78rem}
-.flow .tag{font-size:.78rem}
-.flow i{color:var(--muted);font-style:normal}
-@media (max-width:760px){.projects{grid-template-columns:1fr}}
+/* work */
+.cases{display:grid;gap:28px}
+.case{display:grid;grid-template-columns:1.15fr 1fr;gap:0;background:var(--card);border:1px solid var(--line);border-radius:28px;overflow:hidden}
+.case:nth-child(even) .visual{order:2}
+.visual{position:relative;min-height:400px;display:grid;place-items:center;padding:40px;overflow:hidden}
+.v1{background:radial-gradient(90% 90% at 20% 10%,rgba(77,163,255,.28),transparent 60%),#0d1117}
+.v2{background:radial-gradient(90% 90% at 80% 10%,rgba(200,255,77,.18),transparent 60%),#0d0f0a}
+.v3{background:radial-gradient(90% 90% at 30% 90%,rgba(255,107,154,.25),transparent 60%),#120b0f}
+.v4{background:radial-gradient(90% 90% at 70% 80%,rgba(139,124,255,.28),transparent 60%),#0e0c16}
+.info{padding:48px;display:flex;flex-direction:column;justify-content:center}
+.meta{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:.78rem;color:var(--dim);margin-bottom:22px}
+.award{font-family:Inter,sans-serif;font-weight:600;font-size:.76rem;padding:5px 11px;border-radius:999px;background:rgba(255,200,60,.12);color:#ffd35a;border:1px solid rgba(255,200,60,.25)}
+.info h3{font-family:var(--display);font-size:clamp(1.6rem,3vw,2.2rem);letter-spacing:-.035em;line-height:1.08;margin-bottom:18px}
+.info dl{display:grid;gap:12px;margin-bottom:6px}
+.info dt{font-family:var(--mono);font-size:.72rem;color:var(--lime);text-transform:uppercase;letter-spacing:.08em}
+.info dd{color:var(--muted);font-size:.96rem}
+.result{margin-top:22px;padding-top:20px;border-top:1px solid var(--line);display:flex;gap:28px;flex-wrap:wrap}
+.result div b{display:block;font-family:var(--display);font-size:1.7rem;letter-spacing:-.03em;line-height:1.1}
+.result div > span{font-size:.82rem;color:var(--dim)}
+@media (max-width:900px){.case{grid-template-columns:1fr}.case:nth-child(even) .visual{order:0}.visual{min-height:300px;padding:28px}.info{padding:30px}}
 
-/* certs */
-.certs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.cert{display:flex;gap:14px;align-items:flex-start}
-.cert h3{font-size:.98rem;line-height:1.35}
-.cert span{color:var(--muted);font-size:.85rem}
-@media (max-width:860px){.certs{grid-template-columns:1fr}}
+/* visual mockups */
+.browser{width:100%;max-width:470px;background:#0b0b0e;border:1px solid var(--line-2);border-radius:14px;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.8)}
+.browser .url{flex:1;margin-left:10px;background:rgba(255,255,255,.05);border-radius:6px;padding:3px 10px;font-size:.66rem}
+.bi{display:grid;grid-template-columns:44px 1fr;min-height:250px}
+.bi aside{border-right:1px solid var(--line);padding:12px 0;display:grid;justify-items:center;align-content:start;gap:12px}
+.bi aside i{width:18px;height:18px;border-radius:5px;background:rgba(255,255,255,.08)}
+.bi aside i:first-child{background:var(--blue)}
+.bi main{padding:14px;display:grid;gap:10px;align-content:start}
+.donut{display:flex;align-items:center;gap:12px}
+.legend{display:grid;gap:5px;font-size:.62rem;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:7px;height:7px;border-radius:2px}
+.flowbig{width:100%;max-width:470px}
+.flowbig svg{width:100%;height:auto;display:block;overflow:visible}
+.dash-move{stroke-dasharray:6 6;animation:dash 1s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-12}}
 
-.edu{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
-.edu h3{font-size:1.15rem}
-.edu span{color:var(--muted)}
+/* process */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;counter-reset:s}
+.step{padding:30px 26px;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--card),transparent);position:relative}
+.step b{font-family:var(--mono);font-size:.8rem;color:var(--lime)}
+.step h3{font-family:var(--display);font-size:1.35rem;letter-spacing:-.02em;margin:40px 0 10px}
+.step p{color:var(--muted);font-size:.93rem}
+@media (max-width:960px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.steps{grid-template-columns:1fr}}
+
+/* experience */
+.xp{border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:200px 1.2fr 1fr 28px;gap:24px;align-items:center;padding:28px 0;border-bottom:1px solid var(--line);transition:padding .3s}
+.row:hover{padding-left:12px}
+.row .when{font-family:var(--mono);font-size:.82rem;color:var(--dim)}
+.row h3{font-family:var(--display);font-size:1.3rem;letter-spacing:-.02em;line-height:1.2}
+.row .org{color:var(--muted);font-size:.95rem}
+.row .now{color:var(--lime)}
+.row .arr{color:var(--dim)}
+@media (max-width:760px){.row{grid-template-columns:1fr;gap:4px}.row .arr{display:none}}
+
+/* about */
+.about{display:grid;grid-template-columns:1fr 1.1fr;gap:60px;align-items:start}
+.portrait{aspect-ratio:4/5;border-radius:28px;border:1px solid var(--line-2);background:radial-gradient(70% 60% at 50% 30%,rgba(200,255,77,.22),transparent 70%),linear-gradient(160deg,#1b1b22,#0d0d10);display:grid;place-items:center;position:relative;overflow:hidden}
+.portrait .mono-big{font-family:var(--display);font-weight:800;font-size:clamp(6rem,14vw,10rem);letter-spacing:-.06em;color:var(--lime);line-height:1}
+.portrait .tagline{position:absolute;left:20px;right:20px;bottom:20px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:.75rem;color:var(--muted);padding:12px 16px;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:12px}
+.about .txt p{font-size:1.15rem;color:var(--muted);margin-bottom:18px}
+.about .txt p b{color:var(--text);font-weight:500}
+.creds{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}
+.cred{display:flex;gap:12px;align-items:flex-start;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.cred i{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(200,255,77,.1);color:var(--lime);font-style:normal;font-size:.95rem}
+.cred b{display:block;font-size:.92rem;line-height:1.3}
+.cred span{font-size:.8rem;color:var(--dim)}
+@media (max-width:900px){.about{grid-template-columns:1fr}.portrait{max-width:420px}}
+@media (max-width:560px){.creds{grid-template-columns:1fr}}
 
 /* contact */
-.contact{text-align:center;padding:56px 26px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border:none}
-.contact h2{margin-bottom:10px}
-.contact p{opacity:.9;max-width:520px;margin:0 auto 26px}
-.contact .cta{justify-content:center}
-.contact .btn{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff}
-.contact .btn.primary{background:#fff;color:#1e3a8a;border-color:#fff}
+.contact{padding:140px 0 100px;text-align:center;position:relative;overflow:hidden}
+.contact .orb.a{top:auto;bottom:-300px;right:auto;left:50%;transform:translateX(-50%);background:var(--lime);opacity:.12;width:700px;height:500px}
+.contact h2{margin:0 auto;font-size:clamp(2.6rem,8vw,6.5rem);max-width:none}
+.contact p{color:var(--muted);max-width:520px;margin:24px auto 0;font-size:1.1rem}
+.mail{display:inline-flex;align-items:center;gap:14px;margin-top:40px;font-family:var(--display);font-weight:700;font-size:clamp(1.2rem,3.4vw,2.2rem);letter-spacing:-.02em;border-bottom:2px solid var(--line-2);padding-bottom:6px;transition:border-color .3s,color .3s;word-break:break-all}
+.mail:hover{color:var(--lime);border-color:var(--lime)}
+.contact .cta{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:36px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--lime);color:#09090b;font-weight:600;padding:10px 18px;border-radius:999px;opacity:0;transition:.3s;pointer-events:none;z-index:200}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 
-footer{padding:36px 0;color:var(--muted);font-size:.85rem;text-align:center}
+footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
+.bigname{font-family:var(--display);font-weight:800;font-size:clamp(3rem,13vw,11rem);letter-spacing:-.06em;line-height:.9;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.14);white-space:nowrap;text-align:center}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:30px;color:var(--dim);font-size:.85rem}
+.foot a:hover{color:var(--lime)}
 
-.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
-.reveal.in{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.btn{transition:none}html{scroll-behavior:auto}}
-@media print{nav,.theme,.cta{display:none}.reveal{opacity:1;transform:none}}
+/* reveal */
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}.draw{stroke-dashoffset:0}html{scroll-behavior:auto}
+}
 </style>
 </head>
 <body>
+<div id="progress"></div>
 
-<nav>
+<nav id="nav">
   <div class="wrap">
-    <a href="#top" class="logo">JM<span>.</span>Güere</a>
-    <div class="links">
-      <a href="#sobre-mi">Sobre mí</a>
-      <a href="#habilidades">Habilidades</a>
-      <a href="#experiencia">Experiencia</a>
+    <a href="#top" class="logo"><i>JM</i>Güere</a>
+    <div class="menu">
+      <a href="#servicios">Servicios</a>
       <a href="#proyectos">Proyectos</a>
-      <a href="#certificaciones">Certificaciones</a>
-      <a href="#contacto">Contacto</a>
-      <button class="theme" id="theme" aria-label="Cambiar tema">◐</button>
+      <a href="#proceso">Proceso</a>
+      <a href="#experiencia">Experiencia</a>
+      <a href="#sobre-mi">Sobre mí</a>
     </div>
+    <a href="#contacto" class="btn lime sm">Hablemos
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+    </a>
   </div>
 </nav>
 
 <main id="top">
+<!-- ================= HERO ================= -->
 <header class="hero">
+  <div class="orb a"></div><div class="orb b"></div>
   <div class="wrap">
-    <span class="badge"><span class="dot"></span>Disponible para nuevas oportunidades</span>
-    <h1>Jose Manuel Güere Casas<br><span class="grad">Datos, BI y automatización con IA</span></h1>
-    <p class="lead">Bachiller en Ingeniería de Sistemas. Convierto datos operativos en información útil con SQL, Python y Power BI, y automatizo procesos con IA (n8n + Gemini). Además tengo experiencia sólida en infraestructura y redes.</p>
-    <div class="cta">
-      <a class="btn primary" href="cv-jose-manuel-guere.pdf" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>
-        Descargar CV
-      </a>
-      <a class="btn" href="https://www.linkedin.com/in/jose-manuel-g-a09b90237/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.5h4V21H3V9.5Zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4V9.5Z"/></svg>
-        LinkedIn
-      </a>
-      <a class="btn" href="https://github.com/JGuere2811" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
-        GitHub
-      </a>
+    <div>
+      <span class="avail"><span class="pulse"></span>Disponible para proyectos y empleo · Remoto</span>
+      <p class="hello">Hola, soy <b>Jose Manuel Güere</b> 👋</p>
+      <h1>Diseño y construyo<br>
+        <span class="rot" id="rot"><span class="on">sitios web</span><span>dashboards</span><span>automatizaciones</span></span><br>
+        <span class="soft">que convierten datos en resultados.</span>
+      </h1>
+      <p class="sub">Diseñador web y analista de datos. Creo sitios en <b>WordPress, HTML y CSS</b>, mido su rendimiento con <b>Analytics y Power BI</b> y automatizo procesos con <b>IA</b>.</p>
+      <div class="cta">
+        <a href="#proyectos" class="btn lime">Ver proyectos
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </a>
+        <a href="cv-jose-manuel-guere.pdf" class="btn" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>
+          Descargar CV
+        </a>
+      </div>
+      <div class="socials">
+        <a href="https://www.linkedin.com/in/jose-manuel-g-a09b90237/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.5h4V21H3V9.5Zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4V9.5Z"/></svg></a>
+        <a href="https://github.com/JGuere2811" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></a>
+        <a href="https://wa.me/51930889188" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.27.49 1.7.63.71.23 1.36.2 1.88.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35ZM12.04 21.8h-.01a9.8 9.8 0 0 1-5-1.37l-.36-.21-3.72.97.99-3.62-.23-.37A9.82 9.82 0 1 1 12.04 21.8Zm8.36-18.2A11.8 11.8 0 0 0 1.84 17.84L.16 24l6.3-1.65a11.8 11.8 0 0 0 5.58 1.42h.01A11.81 11.81 0 0 0 20.4 3.6Z"/></svg></a>
+        <span style="margin-left:6px">Huancayo, Perú</span>
+      </div>
     </div>
 
-    <div class="stats">
-      <div class="stat reveal"><b data-count="98">98%</b><span>de incidencias resueltas dentro del SLA</span></div>
-      <div class="stat reveal"><b data-count="96">96%</b><span>de aprobación de los usuarios</span></div>
-      <div class="stat reveal"><b>1.º</b><span>puesto en la Feria de Proyectos de Ingeniería 2024</span></div>
-      <div class="stat reveal"><b>MO-200</b><span>Excel Associate, certificación internacional de Microsoft</span></div>
+    <div class="stage" id="stage" aria-hidden="true">
+      <!-- dashboard -->
+      <div class="win w-dash" data-depth="10">
+        <div class="bar"><i></i><i></i><i></i><span>reporte-trafico.pbix</span></div>
+        <span class="demo">vista de ejemplo</span>
+        <div class="dash">
+          <div class="kpis">
+            <div class="kpi"><small>Sesiones</small><b>12.4k</b><em>▲ 18%</em></div>
+            <div class="kpi"><small>Usuarios</small><b>8.9k</b><em>▲ 11%</em></div>
+            <div class="kpi"><small>Conversión</small><b>3.2%</b><em>▲ 0.4</em></div>
+          </div>
+          <div class="charts">
+            <div class="chart"><small>Tráfico por día</small>
+              <svg viewBox="0 0 300 100" preserveAspectRatio="none">
+                <defs><linearGradient id="g1" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#c8ff4d" stop-opacity=".35"/><stop offset="1" stop-color="#c8ff4d" stop-opacity="0"/></linearGradient></defs>
+                <path d="M0 80 C25 70 40 76 60 62 S95 40 120 48 160 30 185 34 225 14 250 22 285 8 300 6 V100 H0Z" fill="url(#g1)"/>
+                <path class="draw" d="M0 80 C25 70 40 76 60 62 S95 40 120 48 160 30 185 34 225 14 250 22 285 8 300 6" fill="none" stroke="#c8ff4d" stroke-width="2.4"/>
+              </svg>
+            </div>
+            <div class="chart"><small>Por canal</small>
+              <div class="bars"><i style="height:85%;animation-delay:.5s"></i><i style="height:55%;animation-delay:.6s"></i><i style="height:70%;animation-delay:.7s"></i><i style="height:35%;animation-delay:.8s"></i><i style="height:60%;animation-delay:.9s"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- code -->
+      <div class="win w-code" data-depth="22">
+        <div class="bar"><i></i><i></i><i></i><span>index.html</span></div>
+<pre class="code"><span class="c">&lt;!-- hero --&gt;</span>
+<span class="t">&lt;section</span> <span class="a">class</span>=<span class="s">"hero"</span><span class="t">&gt;</span>
+  <span class="t">&lt;h1&gt;</span>Tu marca, bien<span class="t">&lt;/h1&gt;</span>
+  <span class="t">&lt;a</span> <span class="a">href</span>=<span class="s">"#contacto"</span><span class="t">&gt;</span>
+    Empezar<span class="caret"></span></pre>
+      </div>
+      <!-- flow -->
+      <div class="win w-flow" data-depth="34">
+        <div class="bar"><i></i><i></i><i></i><span>n8n · flujo-ia</span></div>
+        <div class="flow">
+          <small>WhatsApp → datos ordenados, sin trabajo manual</small>
+          <div class="nodes">
+            <span class="packet"></span>
+            <div class="node"><b style="background:#25d366">WA</b>Mensajes</div>
+            <div class="node"><b style="background:#ff6d5a">n8n</b>Flujo</div>
+            <div class="node"><b style="background:var(--violet);color:#fff">AI</b>Gemini</div>
+            <div class="node"><b style="background:var(--lime)">GS</b>Sheets</div>
+          </div>
+          <div class="status"><span class="pulse"></span>ejecutándose · automático</div>
+        </div>
+      </div>
     </div>
   </div>
 </header>
 
-<section id="sobre-mi">
+<!-- ================= STATS ================= -->
+<div class="stats">
   <div class="wrap">
-    <span class="eyebrow mono">01 / SOBRE MÍ</span>
-    <h2>Del dato crudo a la decisión</h2>
-    <div class="about">
-      <div class="card reveal">
-        <p>Soy <strong>Bachiller en Ingeniería de Sistemas e Informática</strong> por la Universidad Continental. Trabajo donde se cruzan los <strong>datos</strong>, la <strong>automatización</strong> y la <strong>infraestructura TI</strong>.</p>
-        <p>En Grupo PAMD diseñé flujos con IA que extraen, ordenan y migran registros operativos de WhatsApp a Google Sheets y Google Cloud, eliminando trabajo manual repetitivo. También lideré despliegues de redes corporativas y la gestión de incidencias con resultados medibles.</p>
-        <p>Hoy trabajo como freelance: mantengo un sitio WordPress, mido su tráfico con Google Analytics, Python y Power BI, y gestiono sus campañas en Facebook Ads.</p>
-        <p>Me gusta entender el problema del negocio antes de elegir la herramienta, y explicar los resultados de forma clara a perfiles no técnicos.</p>
-      </div>
-      <div class="card reveal">
-        <ul class="facts">
-          <li><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg></div><div><span class="k">Ubicación</span>Huancayo, Perú · abierto a remoto</div></li>
-          <li><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></svg></div><div><span class="k">Perfil objetivo</span>Analista de Datos / BI · Automatización TI</div></li>
-          <li><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18"/></svg></div><div><span class="k">Idiomas</span>Español nativo · Inglés intermedio (B1)</div></li>
-          <li><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg></div><div><span class="k">Formación</span>Bachiller en Ing. de Sistemas · 2025</div></li>
-        </ul>
-      </div>
-    </div>
+    <div class="stat rv"><b><span data-count="98">0</span>%</b><span>de incidencias resueltas dentro del SLA</span></div>
+    <div class="stat rv d1"><b><span data-count="96">0</span>%</b><span>de aprobación de los usuarios</span></div>
+    <div class="stat rv d2"><b class="lime">1.º</b><span>puesto, Feria de Proyectos de Ingeniería 2024</span></div>
+    <div class="stat rv d3"><b>MO-200</b><span>Microsoft Excel, certificación internacional</span></div>
   </div>
-</section>
-
-<section id="habilidades">
-  <div class="wrap">
-    <span class="eyebrow mono">02 / HABILIDADES</span>
-    <h2>Herramientas con las que trabajo</h2>
-    <div class="skills">
-      <div class="card reveal">
-        <h3><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span>Análisis de datos y BI</h3>
-        <p>Limpieza, modelado y visualización para la toma de decisiones.</p>
-        <div class="tags"><span class="tag">Excel avanzado</span><span class="tag">Power BI · DAX</span><span class="tag">Power Query</span><span class="tag">Tableau</span><span class="tag">SQL Server</span><span class="tag">MySQL</span><span class="tag">Oracle</span><span class="tag">MongoDB</span><span class="tag">Python · Pandas</span><span class="tag">NumPy</span><span class="tag">Google Sheets</span></div>
-      </div>
-      <div class="card reveal">
-        <h3><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg></span>Cloud, IA y automatización</h3>
-        <p>Flujos que conectan sistemas y eliminan trabajo manual.</p>
-        <div class="tags"><span class="tag">n8n</span><span class="tag">Gemini API</span><span class="tag">Copilot</span><span class="tag">Integraciones API</span><span class="tag">Google Cloud (GCP)</span><span class="tag">Microsoft Azure</span></div>
-      </div>
-      <div class="card reveal">
-        <h3><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01"/></svg></span>Infraestructura y operaciones TI</h3>
-        <p>Redes, identidades y soporte con foco en el SLA.</p>
-        <div class="tags"><span class="tag">Redes LAN/WAN</span><span class="tag">Subnetting</span><span class="tag">MikroTik</span><span class="tag">VPN</span><span class="tag">Active Directory</span><span class="tag">Windows Server</span><span class="tag">ServiceNow</span></div>
-      </div>
-      <div class="card reveal">
-        <h3><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg></span>Web y marketing digital</h3>
-        <p>Sitios que se mantienen solos y campañas medidas con datos.</p>
-        <div class="tags"><span class="tag">WordPress</span><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">Banahosting</span><span class="tag">Google Analytics</span><span class="tag">Facebook Ads (Meta)</span></div>
-      </div>
-    </div>
+</div>
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span>WordPress</span><span>HTML &amp; CSS</span><span>Power BI</span><span>Python</span><span>SQL</span><span>Google Analytics</span><span>n8n</span><span>Gemini API</span><span>Facebook Ads</span><span>Excel</span><span>Google Cloud</span><span>Azure</span>
+    <span>WordPress</span><span>HTML &amp; CSS</span><span>Power BI</span><span>Python</span><span>SQL</span><span>Google Analytics</span><span>n8n</span><span>Gemini API</span><span>Facebook Ads</span><span>Excel</span><span>Google Cloud</span><span>Azure</span>
   </div>
-</section>
+</div>
 
-<section id="experiencia">
+<!-- ================= SERVICES ================= -->
+<section id="servicios">
   <div class="wrap">
-    <span class="eyebrow mono">03 / EXPERIENCIA</span>
-    <h2>Trayectoria profesional</h2>
-    <div class="tl">
-      <div class="card job reveal">
-        <div class="when mono">SEP 2026 — ACTUALIDAD</div>
-        <div>
-          <h3>Editor Web y Analista Digital</h3>
-          <span class="org">Freelance · por servicios</span>
-          <ul>
-            <li><strong>Desarrollo web:</strong> edición y mantenimiento del sitio en WordPress, con personalizaciones en HTML y CSS.</li>
-            <li><strong>Hosting:</strong> administración del alojamiento, dominio y correo en Banahosting.</li>
-            <li><strong>Analítica y reportes:</strong> extraigo los datos de Google Analytics, los proceso con Python y construyo reportes en Power BI para medir el tráfico y el rendimiento del sitio.</li>
-            <li><strong>Publicidad digital:</strong> creación y gestión de campañas en Facebook Ads (Meta), apoyadas en los datos de tráfico.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card job reveal">
-        <div class="when mono">OCT 2025 — ACTUALIDAD</div>
-        <div>
-          <h3>Consultor TI Independiente</h3>
-          <span class="org">Grupo PAMD S.A.C. · por servicios</span>
-          <ul>
-            <li><strong>Continuidad de la relación:</strong> tras terminar mi contrato, la empresa sigue contratando mis servicios para proyectos TI puntuales.</li>
-            <li><strong>Servicios bajo demanda:</strong> soporte de redes e infraestructura, y mantenimiento de las automatizaciones de datos que implementé.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card job reveal">
-        <div class="when mono">SEP 2024 — SEP 2025</div>
-        <div>
-          <h3>Ingeniero de Sistemas · Encargado de Proyectos TI (N2)</h3>
-          <span class="org">Grupo PAMD S.A.C. · Huancayo</span>
-          <ul>
-            <li><strong>Ingeniería de datos e IA:</strong> diseñé e implementé flujos automatizados con Gemini API y n8n para extraer, ordenar y migrar registros operativos de WhatsApp a Google Sheets y Google Cloud.</li>
-            <li><strong>Infraestructura:</strong> lideré el levantamiento de requerimientos, el subnetting y el despliegue de redes LAN/WAN corporativas (MikroTik / VPN), mejorando la conectividad de los clientes.</li>
-            <li><strong>Operaciones:</strong> administré identidades y accesos en Active Directory y resolví incidencias críticas en ServiceNow, con un <strong>98% de resolución dentro del SLA</strong> y un <strong>96% de aprobación</strong> de los usuarios.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card job reveal">
-        <div class="when mono">FEB 2023 — ABR 2023</div>
-        <div>
-          <h3>Practicante de Sistemas y Gestión de Información</h3>
-          <span class="org">Clínica Santo Domingo SCRT</span>
-          <ul>
-            <li><strong>Administración de datos:</strong> gestioné bases de datos SQL para el procesamiento de información clínica y de facturación, y automaticé las copias de seguridad.</li>
-            <li><strong>Infraestructura TI:</strong> configuré servidores internos de datos, mejorando la estabilidad y la velocidad de la red para la atención de pacientes en tiempo real.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="proyectos">
-  <div class="wrap">
-    <span class="eyebrow mono">04 / PROYECTOS</span>
-    <h2>Proyectos destacados</h2>
-    <div class="projects">
-      <div class="card proj reveal">
-        <div class="top"><h3>Automatización de registros con IA</h3></div>
-        <p>Flujo que toma mensajes operativos de WhatsApp, los interpreta con IA y los convierte en datos estructurados listos para analizar, sin digitación manual.</p>
-        <div class="flow"><span class="tag">WhatsApp</span><i>→</i><span class="tag">n8n</span><i>→</i><span class="tag">Gemini API</span><i>→</i><span class="tag">Sheets / GCP</span></div>
-      </div>
-      <div class="card proj reveal">
-        <div class="top"><h3>Simulador de cirugía con Realidad Virtual</h3><span class="ribbon">🏆 1.er puesto</span></div>
-        <p>Simulador interactivo en RV para el aprendizaje de cirugías de trasplante de corazón, dirigido a estudiantes de Medicina. Primer puesto en la XVII Feria de Proyectos de Ingeniería 2024 (Universidad Continental).</p>
-        <div class="flow"><span class="tag">Realidad Virtual</span><span class="tag">Simulación</span><span class="tag">Investigación</span></div>
-      </div>
-      <div class="card proj reveal">
-        <div class="top"><h3>Despliegue de redes corporativas</h3></div>
-        <p>Diseño de subredes y despliegue de redes LAN/WAN con MikroTik y VPN para clientes empresariales, desde el levantamiento de requerimientos hasta la puesta en marcha.</p>
-        <div class="flow"><span class="tag">MikroTik</span><span class="tag">VPN</span><span class="tag">Subnetting</span><span class="tag">CCNA</span></div>
-      </div>
-      <div class="card proj reveal">
-        <div class="top"><h3>Reportes de tráfico web</h3></div>
-        <p>Pipeline que lleva los datos de Google Analytics a un dashboard de Power BI, pasando por una limpieza en Python, para medir visitas, fuentes de tráfico y el efecto de las campañas en Facebook.</p>
-        <div class="flow"><span class="tag">Google Analytics</span><i>→</i><span class="tag">Python · Pandas</span><i>→</i><span class="tag">Power BI</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="certificaciones">
-  <div class="wrap">
-    <span class="eyebrow mono">05 / CERTIFICACIONES Y FORMACIÓN</span>
-    <h2>Aprendizaje continuo</h2>
-    <div class="certs">
-      <div class="card cert reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-3 5 3-1.5-7"/></svg></span><div><h3>Microsoft Office Specialist: Excel Associate (MO-200)</h3><span>Microsoft · certificación internacional</span></div></div>
-      <div class="card cert reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-3 5 3-1.5-7"/></svg></span><div><h3>CCNA: Switching, Routing & Wireless Essentials</h3><span>Cisco Networking Academy</span></div></div>
-      <div class="card cert reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-3 5 3-1.5-7"/></svg></span><div><h3>Python Essentials 1</h3><span>Cisco Networking Academy</span></div></div>
-      <div class="card cert reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-8"/></svg></span><div><h3>Power BI: DAX, informes e integración con Python y R</h3><span>Universidad Continental · 42 h · 2026</span></div></div>
-      <div class="card cert reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 18a5 5 0 0 1-.5-9.97A7 7 0 0 1 20 10a4 4 0 0 1-1 7.9"/></svg></span><div><h3>Microsoft Azure Fundamentals (preparación AZ-900)</h3><span>Universidad Continental · 32 h · 2026</span></div></div>
-      <div class="card cert reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg></span><div><h3>Python (preparación PCEP)</h3><span>Universidad Continental · 32 h · 2025</span></div></div>
-    </div>
-
-    <div class="card edu reveal" style="margin-top:16px">
+    <div class="head">
       <div>
-        <span class="eyebrow mono" style="margin:0">FORMACIÓN ACADÉMICA</span>
-        <h3>Bachiller en Ingeniería de Sistemas e Informática</h3>
-        <span>Universidad Continental · Huancayo, Junín</span><br>
-        <span>🏅 Mención honrosa, X Feria de Proyectos de Ingeniería 2020: propuesta de videovigilancia residencial</span>
+        <div class="label">SERVICIOS</div>
+        <h2 class="rv">Lo que puedo hacer <span class="soft">por tu negocio.</span></h2>
       </div>
-      <span class="mono">2025</span>
+      <p class="rv d1">Uno la parte visual con la parte técnica: un sitio bonito no sirve si nadie mide qué funciona.</p>
+    </div>
+    <div class="bento">
+      <article class="svc w4 feature rv">
+        <div>
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg></div>
+          <h3>Diseño y desarrollo web</h3>
+          <p>Sitios rápidos, adaptados a móviles y fáciles de actualizar. Desde la estructura y el diseño hasta la publicación, el dominio y el hosting.</p>
+          <div class="chips"><span class="chip">WordPress</span><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">Responsive</span><span class="chip">Banahosting</span></div>
+        </div>
+        <div class="mini">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <div class="pg">
+            <div class="hero-blk"><i></i></div>
+            <div class="ln" style="width:70%"></div><div class="ln" style="width:50%"></div>
+            <div class="cols"><i></i><i></i><i></i></div>
+            <div class="btnl"></div>
+          </div>
+        </div>
+      </article>
+      <article class="svc w2 rv d1">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></div>
+        <h3>Dashboards y BI</h3>
+        <p>Reportes claros para decidir con datos, no con intuición.</p>
+        <div class="chips"><span class="chip">Power BI</span><span class="chip">DAX</span><span class="chip">SQL</span><span class="chip">Excel</span></div>
+      </article>
+      <article class="svc w2 rv">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 11 16.5 7M7.5 13l9 4"/></svg></div>
+        <h3>Automatización con IA</h3>
+        <p>Flujos que eliminan tareas repetitivas y conectan tus herramientas.</p>
+        <div class="chips"><span class="chip">n8n</span><span class="chip">Gemini</span><span class="chip">APIs</span></div>
+      </article>
+      <article class="svc w2 rv d1">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div>
+        <h3>Analítica y publicidad</h3>
+        <p>Mido el tráfico y uso esos datos para mejorar las campañas.</p>
+        <div class="chips"><span class="chip">Analytics</span><span class="chip">Python</span><span class="chip">Facebook Ads</span></div>
+      </article>
+      <article class="svc w2 rv d2">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01"/></svg></div>
+        <h3>Infraestructura TI</h3>
+        <p>Redes, accesos y soporte con resultados medibles.</p>
+        <div class="chips"><span class="chip">MikroTik</span><span class="chip">VPN</span><span class="chip">Active Directory</span></div>
+      </article>
     </div>
   </div>
 </section>
 
-<section id="contacto">
+<!-- ================= PROJECTS ================= -->
+<section id="proyectos" style="padding-top:40px">
   <div class="wrap">
-    <div class="card contact reveal">
-      <h2>¿Hablamos?</h2>
-      <p>Busco un puesto como Analista de Datos / BI o en automatización TI, donde pueda aportar desde el primer día. Respondo rápido.</p>
-      <div class="cta">
-        <a class="btn primary" href="mailto:jmanuelgc1118@gmail.com">✉ jmanuelgc1118@gmail.com</a>
-        <a class="btn" href="https://wa.me/51930889188" target="_blank" rel="noopener">WhatsApp +51 930 889 188</a>
-        <a class="btn" href="https://www.linkedin.com/in/jose-manuel-g-a09b90237/" target="_blank" rel="noopener">LinkedIn</a>
+    <div class="head">
+      <div>
+        <div class="label">PROYECTOS SELECCIONADOS</div>
+        <h2 class="rv">Trabajo real, <span class="soft">problemas reales.</span></h2>
       </div>
+      <p class="rv d1">Cada proyecto empieza con una pregunta de negocio y termina con algo que se puede usar y medir.</p>
+    </div>
+
+    <div class="cases">
+      <!-- 1 -->
+      <article class="case rv">
+        <div class="visual v1">
+          <div class="browser">
+            <div class="bar"><i></i><i></i><i></i><span class="url">app.powerbi.com · trafico-web</span></div>
+            <div class="bi">
+              <aside><i></i><i></i><i></i><i></i></aside>
+              <main>
+                <div class="kpis">
+                  <div class="kpi"><small>Visitas</small><b>12.4k</b></div>
+                  <div class="kpi"><small>Desde Ads</small><b>41%</b></div>
+                  <div class="kpi"><small>Rebote</small><b>38%</b></div>
+                </div>
+                <div class="charts">
+                  <div class="chart"><small>Sesiones / semana</small>
+                    <svg viewBox="0 0 300 90" preserveAspectRatio="none"><path d="M0 70 L40 58 L80 64 L120 40 L160 46 L200 26 L240 32 L300 12" fill="none" stroke="#4da3ff" stroke-width="2.4"/><path d="M0 80 L40 76 L80 72 L120 66 L160 62 L200 58 L240 50 L300 44" fill="none" stroke="#8b7cff" stroke-width="2" stroke-dasharray="4 4"/></svg>
+                  </div>
+                  <div class="chart donut"><svg viewBox="0 0 42 42" width="58"><circle cx="21" cy="21" r="15.9" fill="none" stroke="#26262c" stroke-width="6"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#4da3ff" stroke-width="6" stroke-dasharray="41 59" stroke-dashoffset="25"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#c8ff4d" stroke-width="6" stroke-dasharray="33 67" stroke-dashoffset="-16"/></svg></div>
+                </div>
+              </main>
+            </div>
+          </div>
+        </div>
+        <div class="info">
+          <div class="meta"><span>01 — FREELANCE · 2026</span></div>
+          <h3>Sitio web + reportes de tráfico en Power BI</h3>
+          <dl>
+            <dt>Reto</dt><dd>Mantener el sitio del cliente al día y saber qué tráfico y qué anuncios realmente funcionan.</dd>
+            <dt>Solución</dt><dd>Mantengo el sitio en WordPress con ajustes en HTML/CSS. Extraigo los datos de Google Analytics, los limpio con Python y construyo un dashboard en Power BI que guía las campañas de Facebook Ads.</dd>
+          </dl>
+          <div class="chips"><span class="chip">WordPress</span><span class="chip">GA</span><span class="chip">Python</span><span class="chip">Power BI</span><span class="chip">Meta Ads</span></div>
+        </div>
+      </article>
+
+      <!-- 2 -->
+      <article class="case rv">
+        <div class="visual v2">
+          <div class="flowbig">
+            <svg viewBox="0 0 460 260" font-family="Inter, sans-serif">
+              <g fill="none" stroke="#c8ff4d" stroke-width="1.6" class="dash-move" opacity=".7">
+                <path d="M92 130 H150"/><path d="M230 130 C260 130 260 70 290 70"/><path d="M230 130 C260 130 260 190 290 190"/><path d="M370 70 C400 70 400 130 410 130"/><path d="M370 190 C400 190 400 130 410 130"/>
+              </g>
+              <g>
+                <rect x="12" y="98" width="80" height="64" rx="14" fill="#16161b" stroke="rgba(255,255,255,.15)"/>
+                <circle cx="52" cy="122" r="10" fill="#25d366"/><text x="52" y="148" text-anchor="middle" font-size="10" fill="#a1a1aa">WhatsApp</text>
+                <rect x="150" y="98" width="80" height="64" rx="14" fill="#16161b" stroke="rgba(255,255,255,.15)"/>
+                <rect x="180" y="112" width="20" height="20" rx="5" fill="#ff6d5a"/><text x="190" y="148" text-anchor="middle" font-size="10" fill="#a1a1aa">n8n</text>
+                <rect x="290" y="38" width="80" height="64" rx="14" fill="#16161b" stroke="rgba(255,255,255,.15)"/>
+                <path d="M330 52 l4 9 9 4 -9 4 -4 9 -4 -9 -9 -4 9 -4z" fill="#8b7cff"/><text x="330" y="92" text-anchor="middle" font-size="10" fill="#a1a1aa">Gemini IA</text>
+                <rect x="290" y="158" width="80" height="64" rx="14" fill="#16161b" stroke="rgba(255,255,255,.15)"/>
+                <rect x="320" y="171" width="20" height="22" rx="3" fill="#34a853"/><path d="M324 178h12M324 183h12M324 188h12" stroke="#fff" stroke-width="1.4"/><text x="330" y="212" text-anchor="middle" font-size="10" fill="#a1a1aa">Sheets</text>
+                <circle cx="420" cy="130" r="22" fill="#c8ff4d"/><path d="M410 130 l7 7 13 -14" fill="none" stroke="#09090b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <text x="420" y="172" text-anchor="middle" font-size="10" fill="#a1a1aa">Google Cloud</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="info">
+          <div class="meta"><span>02 — GRUPO PAMD · 2024–2025</span></div>
+          <h3>Automatización de registros operativos con IA</h3>
+          <dl>
+            <dt>Reto</dt><dd>La información operativa llegaba por chats de WhatsApp: dispersa, desordenada y difícil de analizar.</dd>
+            <dt>Solución</dt><dd>Diseñé un flujo en n8n que usa la API de Gemini para extraer, ordenar y migrar los registros a Google Sheets y Google Cloud, de forma automática.</dd>
+          </dl>
+          <div class="chips"><span class="chip">n8n</span><span class="chip">Gemini API</span><span class="chip">Google Sheets</span><span class="chip">GCP</span></div>
+        </div>
+      </article>
+
+      <!-- 3 -->
+      <article class="case rv">
+        <div class="visual v3">
+          <svg viewBox="0 0 420 260" width="100%" style="max-width:440px">
+            <rect x="60" y="70" width="300" height="120" rx="56" fill="#1a1218" stroke="rgba(255,255,255,.15)"/>
+            <rect x="92" y="96" width="104" height="68" rx="30" fill="#0b0b0e" stroke="#ff6b9a" stroke-opacity=".5"/>
+            <rect x="224" y="96" width="104" height="68" rx="30" fill="#0b0b0e" stroke="#ff6b9a" stroke-opacity=".5"/>
+            <path d="M196 130 h28" stroke="rgba(255,255,255,.2)" stroke-width="6" stroke-linecap="round"/>
+            <path d="M144 118c-6-8-20-4-18 6 2 9 18 18 18 18s16-9 18-18c2-10-12-14-18-6z" fill="#ff6b9a"/>
+            <polyline points="234,132 252,132 260,116 270,148 278,126 286,132 318,132" fill="none" stroke="#ff6b9a" stroke-width="2.2" stroke-linejoin="round" class="draw"/>
+            <text x="210" y="228" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#a1a1aa">SIMULADOR VR · CIRUGÍA CARDIACA</text>
+          </svg>
+        </div>
+        <div class="info">
+          <div class="meta"><span>03 — UNIVERSIDAD CONTINENTAL · 2024</span><span class="award">🏆 1.er puesto</span></div>
+          <h3>Simulador de cirugía con realidad virtual</h3>
+          <dl>
+            <dt>Reto</dt><dd>Los estudiantes de Medicina tienen pocas oportunidades de practicar cirugías complejas, como un trasplante de corazón.</dd>
+            <dt>Solución</dt><dd>Desarrollamos un simulador interactivo en realidad virtual para aprender el procedimiento paso a paso.</dd>
+          </dl>
+          <div class="result"><div><b class="lime">1.er puesto</b><span>XVII Feria de Proyectos de Ingeniería</span></div></div>
+        </div>
+      </article>
+
+      <!-- 4 -->
+      <article class="case rv">
+        <div class="visual v4">
+          <svg viewBox="0 0 420 260" width="100%" style="max-width:440px" font-family="JetBrains Mono, monospace">
+            <g stroke="rgba(255,255,255,.18)" stroke-width="1.5">
+              <path d="M210 60 V110"/><path d="M210 140 L110 190"/><path d="M210 140 L210 190"/><path d="M210 140 L310 190"/>
+            </g>
+            <path d="M240 46 C320 20 360 40 380 70" fill="none" stroke="#8b7cff" stroke-width="2" class="dash-move"/>
+            <rect x="170" y="28" width="80" height="34" rx="10" fill="#8b7cff"/><text x="210" y="50" text-anchor="middle" font-size="11" fill="#fff">MikroTik</text>
+            <rect x="360" y="70" width="44" height="30" rx="8" fill="#16161b" stroke="#8b7cff"/><text x="382" y="89" text-anchor="middle" font-size="9" fill="#c4bcff">VPN</text>
+            <rect x="174" y="110" width="72" height="30" rx="8" fill="#16161b" stroke="rgba(255,255,255,.2)"/><text x="210" y="129" text-anchor="middle" font-size="10" fill="#d4d4d8">switch</text>
+            <g fill="#16161b" stroke="rgba(255,255,255,.2)">
+              <rect x="80" y="190" width="60" height="40" rx="8"/><rect x="180" y="190" width="60" height="40" rx="8"/><rect x="280" y="190" width="60" height="40" rx="8"/>
+            </g>
+            <g font-size="9" fill="#a1a1aa" text-anchor="middle"><text x="110" y="214">LAN 1</text><text x="210" y="214">LAN 2</text><text x="310" y="214">LAN 3</text></g>
+          </svg>
+        </div>
+        <div class="info">
+          <div class="meta"><span>04 — GRUPO PAMD · 2024–2025</span></div>
+          <h3>Redes corporativas y soporte TI</h3>
+          <dl>
+            <dt>Reto</dt><dd>Clientes que necesitaban redes estables y conectadas entre sedes, y usuarios con incidencias críticas que resolver a tiempo.</dd>
+            <dt>Solución</dt><dd>Levantamiento de requerimientos, subnetting y despliegue de redes LAN/WAN con MikroTik y VPN; gestión de accesos en Active Directory e incidencias en ServiceNow.</dd>
+          </dl>
+          <div class="result">
+            <div><b><span data-count="98">0</span>%</b><span>resolución en SLA</span></div>
+            <div><b><span data-count="96">0</span>%</b><span>aprobación de usuarios</span></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROCESS ================= -->
+<section id="proceso" style="padding-top:40px">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="label">CÓMO TRABAJO</div>
+        <h2 class="rv">Un proceso simple, <span class="soft">sin sorpresas.</span></h2>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step rv"><b>01</b><h3>Entender</h3><p>Escucho el objetivo del negocio y reviso qué datos y herramientas ya existen.</p></div>
+      <div class="step rv d1"><b>02</b><h3>Diseñar</h3><p>Propongo la estructura, el diseño y el flujo antes de escribir una sola línea.</p></div>
+      <div class="step rv d2"><b>03</b><h3>Construir</h3><p>Desarrollo el sitio, el dashboard o la automatización, con avances que puedes ver.</p></div>
+      <div class="step rv d3"><b>04</b><h3>Medir y mejorar</h3><p>Publico, mido con datos reales y ajusto lo que haga falta.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EXPERIENCE ================= -->
+<section id="experiencia" style="padding-top:40px">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="label">EXPERIENCIA</div>
+        <h2 class="rv">Dónde he trabajado.</h2>
+      </div>
+      <a href="cv-jose-manuel-guere.pdf" download class="btn rv d1">Descargar CV completo
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>
+      </a>
+    </div>
+    <div class="xp">
+      <div class="row rv"><span class="when now">SEP 2026 — HOY</span><h3>Editor Web y Analista Digital</h3><span class="org">Freelance</span><span class="arr">↗</span></div>
+      <div class="row rv"><span class="when now">OCT 2025 — HOY</span><h3>Consultor TI Independiente</h3><span class="org">Grupo PAMD S.A.C.</span><span class="arr">↗</span></div>
+      <div class="row rv"><span class="when">SEP 2024 — SEP 2025</span><h3>Ingeniero de Sistemas · Encargado de Proyectos TI</h3><span class="org">Grupo PAMD S.A.C.</span><span class="arr">↗</span></div>
+      <div class="row rv"><span class="when">FEB 2023 — ABR 2023</span><h3>Practicante de Sistemas y Gestión de Información</h3><span class="org">Clínica Santo Domingo</span><span class="arr">↗</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="sobre-mi" style="padding-top:40px">
+  <div class="wrap about">
+    <div class="portrait rv">
+      <span class="mono-big">JM</span>
+      <div class="tagline"><span>Huancayo, PE</span><span>Ing. de Sistemas</span></div>
+    </div>
+    <div class="txt">
+      <div class="label">SOBRE MÍ</div>
+      <h2 class="rv" style="margin-bottom:28px">Diseño con ojo de ingeniero.</h2>
+      <p class="rv">Soy <b>Bachiller en Ingeniería de Sistemas e Informática</b> por la Universidad Continental. Mi formación técnica me permite ir más allá del diseño: entiendo cómo funciona lo que hay detrás de un sitio web, desde los datos hasta el servidor.</p>
+      <p class="rv">Hoy trabajo como <b>freelance</b>, diseñando y midiendo sitios web, y antes lideré proyectos de <b>automatización e infraestructura TI</b>. Me gusta explicar las cosas claro y entregar resultados que se puedan medir.</p>
+      <div class="creds">
+        <div class="cred rv"><i>✦</i><div><b>Excel Associate (MO-200)</b><span>Microsoft</span></div></div>
+        <div class="cred rv d1"><i>✦</i><div><b>CCNA: Switching, Routing &amp; Wireless</b><span>Cisco</span></div></div>
+        <div class="cred rv"><i>✦</i><div><b>Python Essentials 1</b><span>Cisco</span></div></div>
+        <div class="cred rv d1"><i>◆</i><div><b>Power BI y Azure (AZ-900)</b><span>Talleres · U. Continental, 2026</span></div></div>
+        <div class="cred rv"><i>★</i><div><b>Mención honrosa · 2020</b><span>Feria de Proyectos de Ingeniería</span></div></div>
+        <div class="cred rv d1"><i>Aa</i><div><b>Español nativo · Inglés B1</b><span>Idiomas</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact" id="contacto">
+  <div class="orb a"></div>
+  <div class="wrap" style="position:relative">
+    <div class="label" style="justify-content:center">CONTACTO</div>
+    <h2 class="rv">¿Tienes un proyecto<br><span class="lime">o una vacante?</span></h2>
+    <p class="rv d1">Hablemos. Respondo en menos de 24 horas.</p>
+    <a class="mail rv d2" href="mailto:jmanuelgc1118@gmail.com">jmanuelgc1118@gmail.com ↗</a>
+    <div class="cta rv d3">
+      <button class="btn" id="copy" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copiar correo
+      </button>
+      <a class="btn lime" href="https://wa.me/51930889188" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+      <a class="btn" href="https://www.linkedin.com/in/jose-manuel-g-a09b90237/" target="_blank" rel="noopener">LinkedIn ↗</a>
     </div>
   </div>
 </section>
 </main>
 
-<footer>© <span id="y"></span> Jose Manuel Güere Casas · Hecho con HTML y CSS</footer>
+<footer>
+  <div class="wrap">
+    <div class="bigname">JOSE MANUEL</div>
+    <div class="foot">
+      <span>© <span id="y"></span> Jose Manuel Güere Casas · Diseñado y programado por mí.</span>
+      <span><a href="https://github.com/JGuere2811" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/in/jose-manuel-g-a09b90237/" target="_blank" rel="noopener">LinkedIn</a> · <a href="#top">Volver arriba ↑</a></span>
+    </div>
+  </div>
+</footer>
+<div class="toast" id="toast">¡Correo copiado!</div>
 
 <script>
-document.getElementById('y').textContent = new Date().getFullYear();
-// tema
-const root = document.documentElement, btn = document.getElementById('theme');
-try { const t = localStorage.getItem('theme'); if (t) root.dataset.theme = t; } catch (e) {}
-btn.addEventListener('click', () => {
-  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-  root.dataset.theme = dark ? 'light' : 'dark';
-  try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
-});
-// animación al hacer scroll
-const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('y').textContent = new Date().getFullYear();
+
+  // nav + progress
+  const nav = document.getElementById('nav'), bar = document.getElementById('progress');
+  const onScroll = () => {
+    nav.classList.toggle('solid', scrollY > 20);
+    const h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (h > 0 ? scrollY / h * 100 : 0) + '%';
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // rotating words
+  const words = [...document.querySelectorAll('#rot span')];
+  let i = 0;
+  if (!reduce) setInterval(() => {
+    const cur = words[i]; i = (i + 1) % words.length; const nxt = words[i];
+    cur.classList.remove('on'); cur.classList.add('out');
+    nxt.classList.remove('out'); nxt.classList.add('on');
+    setTimeout(() => cur.classList.remove('out'), 500);
+  }, 2400);
+
+  // reveal + counters
+  const count = el => {
+    const end = +el.dataset.count; if (reduce) { el.textContent = end; return; }
+    const t0 = performance.now(), dur = 1400;
+    const tick = t => { const p = Math.min((t - t0) / dur, 1); el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  };
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('in');
+    e.target.querySelectorAll('[data-count]').forEach(count);
+    io.unobserve(e.target);
+  }), { threshold: .15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+  // hero parallax
+  const stage = document.getElementById('stage');
+  if (!reduce && matchMedia('(pointer:fine)').matches && stage) {
+    const wins = stage.querySelectorAll('[data-depth]');
+    addEventListener('pointermove', e => {
+      const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
+      wins.forEach(w => { const d = +w.dataset.depth; w.style.transform = `translate3d(${-x * d}px, ${-y * d}px, 0)`; });
+    }, { passive: true });
+  }
+
+  // copy email
+  const toast = document.getElementById('toast');
+  document.getElementById('copy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText('jmanuelgc1118@gmail.com'); toast.textContent = '¡Correo copiado!'; }
+    catch (e) { toast.textContent = 'jmanuelgc1118@gmail.com'; }
+    toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 1800);
+  });
+})();
 </script>
 </body>
 </html>
