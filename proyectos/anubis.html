@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anubis — Caso de estudio · Jose Manuel Güere</title>
+<meta name="description" content="Cómo diseñé y construí Anubis: un gestor de credenciales con cifrado de extremo a extremo, roles, editores con llave por web, métricas de GA4 para decidir rápido y análisis de publicidad de Meta.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Anubis — credenciales cifradas y métricas que se entienden">
+<meta property="og:description" content="Caso de estudio: cifrado de extremo a extremo en el navegador, permisos por rol, informes de GA4 y Meta Ads. Cloudflare Workers + D1.">
+<meta property="og:image" content="https://jguere2811.github.io/proyectos/img/anubis-credenciales.webp">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c8ff4d'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial' font-weight='900' font-size='26' fill='%2309090b'%3EJM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="articulo.css">
+<style>:root{--acento:#d8b46a}.portada .eyebrow,.cifra b{color:var(--acento)}</style>
+</head>
+<body>
+<div id="progreso"></div>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="../"><i>JM</i>Güere</a>
+    <a class="volver" href="../#proyectos">← Todos los proyectos</a>
+    <a class="btn pri sm" href="../#contacto">Hablemos</a>
+  </div>
+</header>
+
+<main>
+<section class="portada">
+  <div class="brillo"></div>
+  <div class="wrap">
+    <span class="eyebrow">CASO DE ESTUDIO · PROYECTO PROPIO · 2026</span>
+    <h1>Anubis: las contraseñas de todas tus webs, <em>cifradas</em>, y métricas que se entienden.</h1>
+    <p class="bajada">Diseñé y programé de principio a fin un gestor para equipos que administran muchas webs de varias empresas: guarda credenciales que ni el servidor puede leer, decide quién ve qué y convierte los datos de Google Analytics y Meta Ads en decisiones simples.</p>
+    <div class="ficha">
+      <div><small>Mi rol</small><b>Diseño, desarrollo y despliegue</b></div>
+      <div><small>Tipo</small><b>Aplicación web (SaaS interno)</b></div>
+      <div><small>Stack</small><b>Cloudflare Workers · D1 · WebCrypto</b></div>
+      <div><small>Estado</small><b>En desarrollo, desplegado</b></div>
+    </div>
+    <div class="acciones">
+      <a class="btn pri" href="../anubis.html">Probar la demo interactiva
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+      <a class="btn" href="#galeria">Ver capturas</a>
+    </div>
+    <div class="marco principal">
+      <div class="barra"><i></i><i></i><i></i><span>anubis · credenciales</span></div>
+      <img src="img/anubis-credenciales.webp" alt="Panel de credenciales de Anubis con webs agrupadas por empresa y botones Ver, Versiones, Editar y Eliminar" width="1440" height="900">
+    </div>
+    <div class="cifras">
+      <div class="cifra"><b>0</b><span>contraseñas que el servidor puede leer</span></div>
+      <div class="cifra"><b>4</b><span>roles con permisos distintos</span></div>
+      <div class="cifra"><b>400</b><span>pruebas automáticas en cada cambio</span></div>
+      <div class="cifra"><b>3</b><span>informes: credenciales, métricas y publicidad</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap cuerpo">
+  <nav class="indice" aria-label="Contenido">
+    <b>CONTENIDO</b>
+    <a href="#problema"><span>01</span>El problema</a>
+    <a href="#idea"><span>02</span>La idea</a>
+    <a href="#arquitectura"><span>03</span>Cómo está hecho</a>
+    <a href="#cifrado"><span>04</span>Cifrado en el navegador</a>
+    <a href="#roles"><span>05</span>Roles y permisos</a>
+    <a href="#editores"><span>06</span>Editores: llave por web</a>
+    <a href="#metricas"><span>07</span>Métricas para decidir</a>
+    <a href="#publicidad"><span>08</span>Publicidad de Meta</a>
+    <a href="#calidad"><span>09</span>Calidad y pruebas</a>
+    <a href="#aprendizajes"><span>10</span>Lo que aprendí</a>
+  </nav>
+
+  <article>
+    <section id="problema">
+      <span class="num-seccion">01 · EL PROBLEMA</span>
+      <h2>Decenas de webs, contraseñas por WhatsApp</h2>
+      <p>Un equipo que administra muchas webs de varias empresas maneja accesos a WordPress, hostings, dominios, DNS y Analytics. En la práctica, esas claves terminan en <strong>chats, hojas de cálculo y correos</strong>: nadie sabe quién vio qué, y cuando alguien deja el equipo no hay forma de saber qué contraseñas cambiar.</p>
+      <p>Además, los dueños de las empresas reciben números de Analytics y de anuncios que no saben leer. Necesitan saber, en pocos segundos, <strong>si les va bien y qué hacer</strong>.</p>
+      <div class="cita">“¿Quién tiene la clave del hosting?” no debería ser una pregunta que se responde buscando en un chat.</div>
+    </section>
+
+    <section id="idea">
+      <span class="num-seccion">02 · LA IDEA</span>
+      <h2>Una bóveda que nadie puede abrir sin permiso</h2>
+      <p>Anubis junta en un solo lugar tres cosas:</p>
+      <ul class="lista">
+        <li><strong>Credenciales cifradas de extremo a extremo:</strong> se cifran y descifran en el navegador. El servidor solo guarda texto ilegible.</li>
+        <li><strong>Permisos por rol:</strong> administrador, propietario, SEO y editor. Cada uno ve exactamente lo que le corresponde, y el servidor lo comprueba siempre.</li>
+        <li><strong>Informes que se entienden:</strong> métricas diarias de Google Analytics y gasto de Meta Ads, explicados con un semáforo, cifras en lenguaje simple y acciones concretas.</li>
+      </ul>
+      <figure>
+        <div class="marco"><div class="barra"><i></i><i></i><i></i><span>anubis · acceso</span></div>
+          <img src="img/anubis-acceso.webp" alt="Pantalla de entrada de Anubis: 'Cada acceso, bajo tu control' y el formulario para abrir las llaves" loading="lazy" width="1440" height="900"></div>
+        <figcaption>La entrada: la identidad la da Cloudflare Access y, aparte, cada persona abre sus llaves con una contraseña maestra que nunca sale de su navegador.</figcaption>
+      </figure>
+    </section>
+
+    <section id="arquitectura">
+      <span class="num-seccion">03 · CÓMO ESTÁ HECHO</span>
+      <h2>Sin servidores propios, en el borde de Cloudflare</h2>
+      <p>Toda la aplicación corre como un <strong>Cloudflare Worker</strong> con una base de datos <strong>D1 (SQLite)</strong>. No hay servidores que mantener, responde rápido desde cualquier país y el costo es mínimo.</p>
+      <div class="diagrama" role="img" aria-label="Arquitectura: navegador que cifra, Cloudflare Access, Worker con permisos, base D1 y cron diario de GA4">
+        <svg viewBox="0 0 900 300" font-family="Inter, sans-serif">
+          <defs><marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d8b46a"/></marker></defs>
+          <g fill="none" stroke="#d8b46a" stroke-width="1.6" marker-end="url(#flecha)">
+            <path class="flujo-mov" d="M190 110 H262"/><path class="flujo-mov" d="M420 110 H482"/><path class="flujo-mov" d="M680 110 H742"/><path class="flujo-mov" d="M580 236 V160"/>
+          </g>
+          <rect x="20" y="60" width="170" height="100" rx="16" fill="#1d1a12" stroke="rgba(255,236,190,.2)"/>
+          <text x="105" y="98" text-anchor="middle" font-size="15" font-weight="600" fill="#f3efe4">Navegador</text>
+          <text x="105" y="120" text-anchor="middle" font-size="11.5" fill="#aaa48f">cifra y descifra</text>
+          <text x="105" y="138" text-anchor="middle" font-size="11.5" fill="#d8b46a" font-family="JetBrains Mono">WebCrypto</text>
+          <rect x="264" y="60" width="156" height="100" rx="16" fill="#1d1a12" stroke="rgba(255,236,190,.2)"/>
+          <text x="342" y="102" text-anchor="middle" font-size="15" font-weight="600" fill="#f3efe4">Cloudflare</text>
+          <text x="342" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#f3efe4">Access</text>
+          <text x="342" y="142" text-anchor="middle" font-size="11.5" fill="#aaa48f">identidad por correo</text>
+          <rect x="484" y="40" width="196" height="140" rx="16" fill="#2a2416" stroke="#d8b46a"/>
+          <text x="582" y="74" text-anchor="middle" font-size="15" font-weight="700" fill="#f0d08a">Worker</text>
+          <text x="582" y="100" text-anchor="middle" font-size="11.5" fill="#e4dcc6">permisos por rol</text>
+          <text x="582" y="120" text-anchor="middle" font-size="11.5" fill="#e4dcc6">lecturas / escrituras</text>
+          <text x="582" y="140" text-anchor="middle" font-size="11.5" fill="#e4dcc6">informes GA4 y Meta</text>
+          <text x="582" y="160" text-anchor="middle" font-size="11.5" fill="#e4dcc6">auditoría</text>
+          <rect x="744" y="60" width="136" height="100" rx="16" fill="#1d1a12" stroke="rgba(255,236,190,.2)"/>
+          <text x="812" y="102" text-anchor="middle" font-size="15" font-weight="600" fill="#f3efe4">D1</text>
+          <text x="812" y="122" text-anchor="middle" font-size="11.5" fill="#aaa48f">SQLite relacional</text>
+          <text x="812" y="140" text-anchor="middle" font-size="11.5" fill="#aaa48f">solo datos cifrados</text>
+          <rect x="484" y="236" width="196" height="50" rx="14" fill="#1d1a12" stroke="rgba(255,236,190,.2)"/>
+          <text x="582" y="266" text-anchor="middle" font-size="12.5" fill="#e4dcc6">Cron diario → GA4 Data API</text>
+        </svg>
+      </div>
+      <ul class="lista">
+        <li><strong>Cloudflare Access</strong> verifica quién eres (código por correo). El Worker comprueba la <strong>firma</strong> del token en cada petición; nunca se fía solo de una cabecera.</li>
+        <li><strong>Cada escritura es una transacción</strong> con control de versión: si otra persona cambió el mismo dato, la operación entera se revierte y se avisa.</li>
+        <li><strong>Reglas en la base de datos</strong> (triggers), no solo en el código: por ejemplo, una web solo puede cifrarse con la llave de la empresa de su dominio.</li>
+        <li><strong>Seguridad del panel:</strong> política de contenido estricta (solo scripts propios) y sin <code>innerHTML</code>: ningún dato puede inyectar código.</li>
+      </ul>
+    </section>
+
+    <section id="cifrado">
+      <span class="num-seccion">04 · CIFRADO EN EL NAVEGADOR</span>
+      <h2>Cajas fuertes y sobres cerrados</h2>
+      <p>La forma más simple de explicarlo: <strong>cada empresa tiene una caja fuerte</strong>. Cualquiera con permiso puede <em>meter</em> una contraseña por la ranura (llave pública), pero solo quien tiene la <em>llave para abrir</em> (llave privada) puede leerla.</p>
+      <p>Esa llave nunca viaja suelta: se guarda en <strong>un sobre cerrado para cada persona</strong>, que solo se abre con su contraseña maestra, en su navegador. El servidor guarda los sobres, pero no puede abrir ninguno.</p>
+      <div class="pasos">
+        <div class="paso"><div><b>El propietario activa la empresa</b><span>Su navegador crea la caja fuerte y guarda una copia de la llave en un sobre a su nombre.</span></div></div>
+        <div class="paso"><div><b>Entra alguien nuevo</b><span>Al crear su contraseña maestra se genera su propio candado (par de llaves), y recibe un código de recuperación para imprimir.</span></div></div>
+        <div class="paso"><div><b>El propietario pulsa «Dar acceso»</b><span>Su navegador mete una copia de la llave en un sobre cerrado con el candado de esa persona. Hacen falta dos personas: el administrador autoriza, el propietario comparte.</span></div></div>
+      </div>
+      <div class="nota"><b>Detalle técnico:</b> curvas elípticas (ECDH) para los sobres, AES-256-GCM para el contenido, la contraseña maestra se deriva con PBKDF2 (mínimo 600.000 iteraciones) y cada cifrado va ligado a su tabla, columna e id para que no se pueda “trasplantar” a otro registro. Todo con la API WebCrypto del navegador, sin librerías externas.</div>
+      <p>Una consecuencia interesante: <strong>guardar no requiere poder leer</strong>. El administrador puede cambiar o eliminar la contraseña de una web usando la ranura, pero no puede leer la que había.</p>
+    </section>
+
+    <section id="roles">
+      <span class="num-seccion">05 · ROLES Y PERMISOS</span>
+      <h2>Cada persona ve solo lo suyo</h2>
+      <p>Las reglas salen de cómo trabaja de verdad un equipo de webs. Todo se comprueba en el servidor, y nadie puede crear una cuenta de su mismo nivel o superior.</p>
+      <div class="tabla"><table>
+        <thead><tr><th>Qué</th><th>Admin</th><th>Propietario</th><th>SEO</th><th>Editor</th></tr></thead>
+        <tbody>
+          <tr><td>Webs de su empresa</td><td class="medio">Cambia sin leer</td><td class="si">Ve y gestiona</td><td class="si">Consulta</td><td class="medio">Solo las asignadas</td></tr>
+          <tr><td>Cuentas propias del propietario</td><td class="medio">Cambia sin leer</td><td class="si">Ve y gestiona</td><td class="no">No ve</td><td class="no">No ve</td></tr>
+          <tr><td>Hosting compartido</td><td class="si">Ve y gestiona</td><td class="no">No ve</td><td class="si">Ve y usa</td><td class="no">No ve</td></tr>
+          <tr><td>Métricas y publicidad</td><td class="si">Todas</td><td class="si">Sus empresas</td><td class="medio">Lo compartido</td><td class="no">No ve</td></tr>
+          <tr><td>Actividad y papelera</td><td class="si">Todo</td><td class="si">Sus empresas</td><td class="no">No</td><td class="no">No</td></tr>
+        </tbody>
+      </table></div>
+      <ul class="lista">
+        <li><strong>Versiones y papelera:</strong> cada cambio guarda la versión anterior y lo eliminado espera 14 días antes de borrarse.</li>
+        <li><strong>Anular un acceso:</strong> al desactivar a alguien, su sesión se corta y Anubis lista qué credenciales consultó, para cambiarlas.</li>
+        <li><strong>Varias cuentas por persona:</strong> quien tiene dos roles usa dos correos (por ejemplo con <code>+seo</code>) y cambia de cuenta con un clic.</li>
+      </ul>
+    </section>
+
+    <section id="editores">
+      <span class="num-seccion">06 · EDITORES: LLAVE POR WEB</span>
+      <h2>Dar acceso a unas webs, no a toda la empresa</h2>
+      <p>Un editor solo debe poder <strong>consultar y copiar</strong> las credenciales de algunas webs. Esconderlas en pantalla no basta: si recibiera la llave de la empresa, técnicamente podría descifrarlo todo.</p>
+      <p>La solución fue darle a <strong>cada web su propia llave</strong>. La llave de la empresa abre todas (propietarios y SEO siguen igual), y al editor solo se le entregan sobres con las llaves de lo que se le asignó: un dominio entero o webs sueltas.</p>
+      <div class="dos-fig">
+        <figure><div class="marco"><div class="barra"><i></i><i></i><i></i><span>gestión · editores</span></div>
+          <img src="img/anubis-editores.webp" alt="Sección Editores en Gestión: una editora con el dominio mas.test asignado y 2 webs con acceso" loading="lazy" width="1440" height="900"></div>
+          <figcaption>El propietario asigna un dominio; las llaves se entregan solas.</figcaption></figure>
+        <figure><div class="marco"><div class="barra"><i></i><i></i><i></i><span>vista del editor</span></div>
+          <img src="img/anubis-vista-editor.webp" alt="Vista del editor: solo dos webs de mas.test, con el botón Ver y la contraseña descifrada" loading="lazy" width="1440" height="900"></div>
+          <figcaption>El editor solo ve y descifra lo asignado; sin métricas ni gestión.</figcaption></figure>
+      </div>
+      <p>Todo el reparto es <strong>automático</strong>: al crear una web se genera su llave; al entrar un propietario, su navegador da llave propia a las webs antiguas y entrega los sobres pendientes. El servidor solo acepta entregas que una asignación vigente cubre.</p>
+    </section>
+
+    <section id="metricas">
+      <span class="num-seccion">07 · MÉTRICAS PARA DECIDIR</span>
+      <h2>Un semáforo en vez de cuarenta números</h2>
+      <p>El cliente no necesita saber qué es una “tasa de interacción”: necesita saber si le va bien y qué hacer. Por eso la pestaña de métricas abre con una <strong>vista simple</strong>:</p>
+      <ul class="lista">
+        <li><strong>Veredicto con semáforo</strong> (bien, estable o atención) y una frase: “Tus webs recibieron 5.257 visitas, 6% menos que el mes pasado; 55 de cada 100 se quedaron”.</li>
+        <li><strong>Cuatro cifras en lenguaje simple</strong>, cada una con su flecha frente al periodo anterior.</li>
+        <li><strong>Qué hacer ahora:</strong> hasta tres acciones con el dato que las respalda (mover presupuesto a la campaña más barata, mejorar la web con menos interacción, publicar el mejor día…).</li>
+        <li><strong>Periodos de un clic:</strong> esta semana, este mes, mes pasado, 30 días o personalizado; con menos de 3 días de datos, no alarma.</li>
+      </ul>
+      <figure><div class="marco"><div class="barra"><i></i><i></i><i></i><span>anubis · métricas</span></div>
+        <img src="img/anubis-metricas.webp" alt="Vista simple de métricas: semáforo en Atención, cuatro cifras y la acción recomendada" loading="lazy" width="1440" height="900"></div>
+        <figcaption>La vista simple. Debajo, plegado, está el informe completo con historial día a día, comparación por web, fuentes y eventos.</figcaption></figure>
+    </section>
+
+    <section id="publicidad">
+      <span class="num-seccion">08 · PUBLICIDAD DE META</span>
+      <h2>¿Cuánto cuesta atraer resultados?</h2>
+      <p>La pestaña Publicidad lee el gasto de Meta Ads <strong>por anuncio y por día</strong> (importado del CSV del Administrador de anuncios) y lo muestra en tres vistas con filtros de dominio, sitio, anuncio y fechas:</p>
+      <ul class="lista">
+        <li><strong>Resumen de gastos:</strong> gasto, CPC, costo por visita, CPM, gasto diario y donas por dominio y por anuncio.</li>
+        <li><strong>Costo por resultado:</strong> ranking de anuncios del más barato al más caro, separado por tipo de objetivo.</li>
+        <li><strong>Comparar con Analytics:</strong> gasto de Meta frente a sesiones de GA4 por sitio, solo en los días con datos en ambas fuentes y aclarando que no es atribución.</li>
+      </ul>
+      <div class="dos-fig">
+        <figure><div class="marco"><div class="barra"><i></i><i></i><i></i><span>publicidad · resumen</span></div>
+          <img src="img/anubis-publicidad-graficos.webp" alt="Gasto diario en barras y donas de gasto por dominio y por anuncio" loading="lazy" width="1440" height="900"></div></figure>
+        <figure><div class="marco"><div class="barra"><i></i><i></i><i></i><span>publicidad · costo por resultado</span></div>
+          <img src="img/anubis-costo-resultado.webp" alt="Ranking de costo por resultado por anuncio, separado por visitas a destino, perfil y conversaciones" loading="lazy" width="1440" height="900"></div></figure>
+      </div>
+      <p>El importador entiende exportaciones en español o inglés, fechas y montos en ambos formatos, asocia cada anuncio a su dominio por la URL de destino y deja los anuncios a perfiles o Messenger como “Redes sociales”.</p>
+    </section>
+
+    <section id="calidad">
+      <span class="num-seccion">09 · CALIDAD Y PRUEBAS</span>
+      <h2>400 pruebas antes de cada cambio</h2>
+      <p>En un gestor de contraseñas un error de permisos es grave, así que cada regla tiene su prueba automática. Las pruebas usan <strong>cifrado real</strong>, igual que el navegador: por ejemplo, comprueban que un editor <strong>no puede descifrar</strong> una web que no se le asignó, aunque intente “colarse” directamente por la API.</p>
+      <div class="chips"><span class="chip">400 pruebas (node:test)</span><span class="chip">Base de datos falsa en memoria</span><span class="chip">Cifrado real en las pruebas</span><span class="chip">Datos de prueba 100% ficticios</span><span class="chip">Entorno local separado</span></div>
+      <p>También trabajé con un entorno local con cuentas de prueba (un selector que solo funciona en <code>127.0.0.1</code>) y una versión desplegada con base de datos vacía, protegida por Cloudflare Access.</p>
+    </section>
+
+    <section id="aprendizajes">
+      <span class="num-seccion">10 · LO QUE APRENDÍ</span>
+      <h2>Lo que me llevo de este proyecto</h2>
+      <ul class="lista">
+        <li><strong>La seguridad se diseña, no se agrega al final.</strong> La llave por web obligó a repensar cómo se reparten las llaves, no solo a ocultar botones.</li>
+        <li><strong>Un dato sin explicación no sirve.</strong> Pasar de “tasa de interacción 54,2%” a “55 de cada 100 se quedaron” cambió cómo el cliente usa el informe.</li>
+        <li><strong>Las reglas importantes van en varios lugares:</strong> en el código, en la base de datos y en las pruebas.</li>
+        <li><strong>Desplegar en serverless</strong> (Workers + D1 + Access) permite tener una app segura en internet sin administrar servidores.</li>
+      </ul>
+      <p><strong>Próximos pasos:</strong> importación automática diaria de Meta por API, autenticación en dos pasos para administradores y respaldos cifrados semanales.</p>
+    </section>
+  </article>
+</div>
+
+<section class="galeria" id="galeria">
+  <div class="wrap">
+    <span class="eyebrow">GALERÍA · DATOS FICTICIOS</span>
+    <h2>Capturas de la aplicación</h2>
+    <div class="rejilla">
+      <figure><button type="button" data-zoom="img/anubis-acceso.webp"><div class="marco"><img src="img/anubis-acceso.webp" alt="Pantalla de acceso" loading="lazy" width="1440" height="900"></div></button><figcaption>Acceso y contraseña maestra</figcaption></figure>
+      <figure><button type="button" data-zoom="img/anubis-credenciales.webp"><div class="marco"><img src="img/anubis-credenciales.webp" alt="Credenciales" loading="lazy" width="1440" height="900"></div></button><figcaption>Credenciales por empresa</figcaption></figure>
+      <figure><button type="button" data-zoom="img/anubis-metricas.webp"><div class="marco"><img src="img/anubis-metricas.webp" alt="Métricas" loading="lazy" width="1440" height="900"></div></button><figcaption>Métricas con semáforo</figcaption></figure>
+      <figure><button type="button" data-zoom="img/anubis-publicidad.webp"><div class="marco"><img src="img/anubis-publicidad.webp" alt="Publicidad" loading="lazy" width="1440" height="900"></div></button><figcaption>Publicidad: resumen y filtros</figcaption></figure>
+      <figure><button type="button" data-zoom="img/anubis-publicidad-graficos.webp"><div class="marco"><img src="img/anubis-publicidad-graficos.webp" alt="Gráficos de gasto" loading="lazy" width="1440" height="900"></div></button><figcaption>Gasto diario y donas</figcaption></figure>
+      <figure><button type="button" data-zoom="img/anubis-costo-resultado.webp"><div class="marco"><img src="img/anubis-costo-resultado.webp" alt="Costo por resultado" loading="lazy" width="1440" height="900"></div></button><figcaption>Costo por resultado</figcaption></figure>
+      <figure><button type="button" data-zoom="img/anubis-editores.webp"><div class="marco"><img src="img/anubis-editores.webp" alt="Editores" loading="lazy" width="1440" height="900"></div></button><figcaption>Asignación de editores</figcaption></figure>
+      <figure><button type="button" data-zoom="img/anubis-vista-editor.webp"><div class="marco"><img src="img/anubis-vista-editor.webp" alt="Vista de editor" loading="lazy" width="1440" height="900"></div></button><figcaption>Lo que ve un editor</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="cierre">
+  <div class="wrap">
+    <div class="tarjeta">
+      <div><h2>¿Necesitas algo así para tu equipo o tu negocio?</h2><p>Puedo diseñar y construir paneles, automatizaciones y reportes a la medida, con la seguridad pensada desde el inicio.</p></div>
+      <div class="acciones"><a class="btn pri" href="../#contacto">Hablemos</a><a class="btn" href="../anubis.html">Probar la demo</a></div>
+    </div>
+    <div class="siguientes">
+      <a href="reportes-trafico.html"><small>SIGUIENTE CASO →</small><b>Sitio web + reportes de tráfico en Power BI</b></a>
+      <a href="automatizacion-ia.html"><small>OTRO CASO →</small><b>Automatización de registros con IA</b></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><span>© <span id="anio"></span> Jose Manuel Güere Casas</span><a href="../" class="volver">Volver al portafolio</a></div></footer>
+<dialog class="zoom" id="zoom"><img alt=""></dialog>
+<script src="articulo.js"></script>
+</body>
+</html>

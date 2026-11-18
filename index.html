@@ -196,6 +196,9 @@ h2 .soft{color:var(--dim)}
 .info dl{display:grid;gap:12px;margin-bottom:6px}
 .info dt{font-family:var(--mono);font-size:.72rem;color:var(--lime);text-transform:uppercase;letter-spacing:.08em}
 .info dd{color:var(--muted);font-size:.96rem}
+.leer{display:inline-flex;align-items:center;gap:8px;margin-top:22px;align-self:flex-start;color:var(--lime);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(200,255,77,.35);padding-bottom:2px;transition:gap .2s}
+.leer:hover{gap:14px}
+.botones-caso{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
 .result{margin-top:22px;padding-top:20px;border-top:1px solid var(--line);display:flex;gap:28px;flex-wrap:wrap}
 .result div b{display:block;font-family:var(--display);font-size:1.7rem;letter-spacing:-.03em;line-height:1.1}
 .result div > span{font-size:.82rem;color:var(--dim)}
@@ -486,9 +489,12 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
             <dt>Solución</dt><dd>Una app con cifrado de extremo a extremo en el navegador, permisos por rol (admin, propietario, SEO), métricas diarias de GA4, versiones y papelera. Corre sin servidores propios en Cloudflare Workers + D1.</dd>
           </dl>
           <div class="chips"><span class="chip">Cloudflare Workers</span><span class="chip">D1</span><span class="chip">WebCrypto</span><span class="chip">GA4 API</span></div>
-          <a href="anubis.html" class="btn lime" style="margin-top:24px;align-self:flex-start">Probar la demo interactiva
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
-          </a>
+          <div class="botones-caso">
+            <a href="proyectos/anubis.html" class="btn lime">Leer el caso completo
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a href="anubis.html" class="btn">Probar la demo</a>
+          </div>
         </div>
       </article>
 
@@ -523,6 +529,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
             <dt>Solución</dt><dd>Mantengo el sitio en WordPress con ajustes en HTML/CSS. Extraigo los datos de Google Analytics, los limpio con Python y construyo un dashboard en Power BI que guía las campañas de Facebook Ads.</dd>
           </dl>
           <div class="chips"><span class="chip">WordPress</span><span class="chip">GA</span><span class="chip">Python</span><span class="chip">Power BI</span><span class="chip">Meta Ads</span></div>
+          <a href="proyectos/reportes-trafico.html" class="leer">Leer el caso completo <span aria-hidden="true">→</span></a>
         </div>
       </article>
 
@@ -557,6 +564,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
             <dt>Solución</dt><dd>Diseñé un flujo en n8n que usa la API de Gemini para extraer, ordenar y migrar los registros a Google Sheets y Google Cloud, de forma automática.</dd>
           </dl>
           <div class="chips"><span class="chip">n8n</span><span class="chip">Gemini API</span><span class="chip">Google Sheets</span><span class="chip">GCP</span></div>
+          <a href="proyectos/automatizacion-ia.html" class="leer">Leer el caso completo <span aria-hidden="true">→</span></a>
         </div>
       </article>
 
@@ -581,6 +589,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
             <dt>Solución</dt><dd>Desarrollamos un simulador interactivo en realidad virtual para aprender el procedimiento paso a paso.</dd>
           </dl>
           <div class="result"><div><b class="lime">1.er puesto</b><span>XVII Feria de Proyectos de Ingeniería</span></div></div>
+          <a href="proyectos/simulador-vr.html" class="leer">Leer el caso completo <span aria-hidden="true">→</span></a>
         </div>
       </article>
 
@@ -612,6 +621,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
             <div><b><span data-count="98">0</span>%</b><span>resolución en SLA</span></div>
             <div><b><span data-count="96">0</span>%</b><span>aprobación de usuarios</span></div>
           </div>
+          <a href="proyectos/redes-corporativas.html" class="leer">Leer el caso completo <span aria-hidden="true">→</span></a>
         </div>
       </article>
     </div>
