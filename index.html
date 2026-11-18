@@ -196,13 +196,23 @@ h2 .soft{color:var(--dim)}
 .info dl{display:grid;gap:12px;margin-bottom:6px}
 .info dt{font-family:var(--mono);font-size:.72rem;color:var(--lime);text-transform:uppercase;letter-spacing:.08em}
 .info dd{color:var(--muted);font-size:.96rem}
+.filtro-proyectos{display:flex;gap:8px;flex-wrap:wrap;margin:-26px 0 30px}
+.filtro-proyectos button{font:inherit;font-size:.88rem;cursor:pointer;padding:9px 16px;border-radius:999px;border:1px solid var(--line-2);background:var(--card);color:var(--muted);transition:.2s}
+.filtro-proyectos button span{font-family:var(--mono);font-size:.72rem;color:var(--dim);margin-left:4px}
+.filtro-proyectos button:hover{color:var(--text);border-color:rgba(255,255,255,.3)}
+.filtro-proyectos button.activo{background:var(--lime);border-color:var(--lime);color:#09090b;font-weight:600}
+.filtro-proyectos button.activo span{color:#09090b;opacity:.65}
+.case[hidden]{display:none}
+.case.vis-der .visual{order:2}.case.vis-izq .visual{order:0}
+.cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.cats span{font-size:.68rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:#d4d4d8}
 .leer{display:inline-flex;align-items:center;gap:8px;margin-top:22px;align-self:flex-start;color:var(--lime);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(200,255,77,.35);padding-bottom:2px;transition:gap .2s}
 .leer:hover{gap:14px}
 .botones-caso{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
 .result{margin-top:22px;padding-top:20px;border-top:1px solid var(--line);display:flex;gap:28px;flex-wrap:wrap}
 .result div b{display:block;font-family:var(--display);font-size:1.7rem;letter-spacing:-.03em;line-height:1.1}
 .result div > span{font-size:.82rem;color:var(--dim)}
-@media (max-width:900px){.case{grid-template-columns:1fr}.case:nth-child(even) .visual{order:0}.visual{min-height:300px;padding:28px}.info{padding:30px}}
+@media (max-width:900px){.case{grid-template-columns:1fr}.case:nth-child(even) .visual,.case.vis-der .visual{order:0}.visual{min-height:300px;padding:28px}.info{padding:30px}}
 
 /* visual mockups */
 .browser{width:100%;max-width:470px;background:#0b0b0e;border:1px solid var(--line-2);border-radius:14px;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.8)}
@@ -467,9 +477,17 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
       <p class="rv d1">Cada proyecto empieza con una pregunta de negocio y termina con algo que se puede usar y medir.</p>
     </div>
 
+    <div class="filtro-proyectos rv" role="group" aria-label="Filtrar proyectos por categoría">
+      <button type="button" class="activo" aria-pressed="true" data-filtro="todos">Todos <span>6</span></button>
+      <button type="button" aria-pressed="false" data-filtro="datos">Datos y BI <span>3</span></button>
+      <button type="button" aria-pressed="false" data-filtro="web">Desarrollo web <span>2</span></button>
+      <button type="button" aria-pressed="false" data-filtro="automatizacion">Automatización e IA <span>1</span></button>
+      <button type="button" aria-pressed="false" data-filtro="redes">Redes e infraestructura <span>2</span></button>
+      <button type="button" aria-pressed="false" data-filtro="innovacion">Innovación <span>1</span></button>
+    </div>
     <div class="cases">
       <!-- 0: Anubis -->
-      <article class="case rv">
+      <article class="case rv" data-cat="web datos">
         <div class="visual v0">
           <div class="browser" style="border-color:rgba(216,180,106,.3)">
             <div class="bar"><i></i><i></i><i></i><span class="url">anubis · panel</span></div>
@@ -483,6 +501,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
         </div>
         <div class="info">
           <div class="meta"><span>01 — PROYECTO PROPIO · 2026</span><span class="award" style="background:rgba(216,180,106,.12);color:#d8b46a;border-color:rgba(216,180,106,.3)">En desarrollo</span></div>
+          <div class="cats"><span>Desarrollo web</span><span>Datos y BI</span></div>
           <h3>Anubis: credenciales cifradas y métricas para agencias</h3>
           <dl>
             <dt>Reto</dt><dd>Los equipos que administran muchas webs terminan pasándose las contraseñas por chat, sin control de quién ve qué.</dd>
@@ -499,7 +518,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
       </article>
 
       <!-- 1 -->
-      <article class="case rv">
+      <article class="case rv" data-cat="datos web">
         <div class="visual v1">
           <div class="browser">
             <div class="bar"><i></i><i></i><i></i><span class="url">app.powerbi.com · trafico-web</span></div>
@@ -523,6 +542,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
         </div>
         <div class="info">
           <div class="meta"><span>02 — FREELANCE · 2026</span></div>
+          <div class="cats"><span>Datos y BI</span><span>Desarrollo web</span></div>
           <h3>Sitio web + reportes de tráfico en Power BI</h3>
           <dl>
             <dt>Reto</dt><dd>Mantener el sitio del cliente al día y saber qué tráfico y qué anuncios realmente funcionan.</dd>
@@ -534,7 +554,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
       </article>
 
       <!-- 2 -->
-      <article class="case rv">
+      <article class="case rv" data-cat="automatizacion datos">
         <div class="visual v2">
           <div class="flowbig">
             <svg viewBox="0 0 460 260" font-family="Inter, sans-serif">
@@ -558,6 +578,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
         </div>
         <div class="info">
           <div class="meta"><span>03 — GRUPO PAMD · 2024–2025</span></div>
+          <div class="cats"><span>Automatización e IA</span><span>Datos y BI</span></div>
           <h3>Automatización de registros operativos con IA</h3>
           <dl>
             <dt>Reto</dt><dd>La información operativa llegaba por chats de WhatsApp: dispersa, desordenada y difícil de analizar.</dd>
@@ -569,7 +590,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
       </article>
 
       <!-- 3 -->
-      <article class="case rv">
+      <article class="case rv" data-cat="innovacion">
         <div class="visual v3">
           <svg viewBox="0 0 420 260" width="100%" style="max-width:440px">
             <rect x="60" y="70" width="300" height="120" rx="56" fill="#1a1218" stroke="rgba(255,255,255,.15)"/>
@@ -583,6 +604,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
         </div>
         <div class="info">
           <div class="meta"><span>04 — UNIVERSIDAD CONTINENTAL · 2024</span><span class="award">🏆 1.er puesto</span></div>
+          <div class="cats"><span>Innovación</span></div>
           <h3>Simulador de cirugía con realidad virtual</h3>
           <dl>
             <dt>Reto</dt><dd>Los estudiantes de Medicina tienen pocas oportunidades de practicar cirugías complejas, como un trasplante de corazón.</dd>
@@ -594,7 +616,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
       </article>
 
       <!-- 4 -->
-      <article class="case rv">
+      <article class="case rv" data-cat="redes">
         <div class="visual v4">
           <svg viewBox="0 0 420 260" width="100%" style="max-width:440px" font-family="JetBrains Mono, monospace">
             <g stroke="rgba(255,255,255,.18)" stroke-width="1.5">
@@ -612,6 +634,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
         </div>
         <div class="info">
           <div class="meta"><span>05 — GRUPO PAMD · 2024–2025</span></div>
+          <div class="cats"><span>Redes e infraestructura</span></div>
           <h3>Redes corporativas y soporte TI</h3>
           <dl>
             <dt>Reto</dt><dd>Clientes que necesitaban redes estables y conectadas entre sedes, y usuarios con incidencias críticas que resolver a tiempo.</dd>
@@ -622,6 +645,35 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
             <div><b><span data-count="96">0</span>%</b><span>aprobación de usuarios</span></div>
           </div>
           <a href="proyectos/redes-corporativas.html" class="leer">Leer el caso completo <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+
+      <!-- 6: Huancahuasi -->
+      <article class="case rv" data-cat="redes">
+        <div class="visual v4">
+          <svg viewBox="0 0 760 300" font-family="Inter, sans-serif" width="100%" style="max-width:520px" role="img" aria-label="Diagrama: un MikroTik reparte cuatro redes independientes">
+            <g fill="none" stroke-width="1.8"><path d="M380 92 V120 H110 V150" stroke="#4da3ff"/><path d="M380 92 V120 H290 V150" stroke="#c8ff4d"/><path d="M380 92 V120 H470 V150" stroke="#ff6b9a"/><path d="M380 92 V120 H650 V150" stroke="#d8b46a"/></g>
+            <rect x="300" y="24" width="160" height="68" rx="14" fill="#2a2436" stroke="#8b7cff"/><text x="380" y="54" text-anchor="middle" font-size="18" font-weight="700" fill="#e9e5ff">MikroTik</text><text x="380" y="76" text-anchor="middle" font-size="12" fill="#bdb4f0">internet · DHCP · firewall</text>
+            <rect x="30" y="150" width="160" height="96" rx="14" fill="#141418" stroke="#4da3ff"/><text x="110" y="196" text-anchor="middle" font-size="17" font-weight="600" fill="#f4f4f5">Administración</text><text x="110" y="220" text-anchor="middle" font-size="12" fill="#a1a1aa">caja · oficina</text>
+            <rect x="210" y="150" width="160" height="96" rx="14" fill="#141418" stroke="#c8ff4d"/><text x="290" y="196" text-anchor="middle" font-size="17" font-weight="600" fill="#f4f4f5">Cocina y mozos</text><text x="290" y="220" text-anchor="middle" font-size="12" fill="#a1a1aa">pedidos · impresoras</text>
+            <rect x="390" y="150" width="160" height="96" rx="14" fill="#141418" stroke="#ff6b9a"/><text x="470" y="196" text-anchor="middle" font-size="17" font-weight="600" fill="#f4f4f5">Cámaras</text><text x="470" y="220" text-anchor="middle" font-size="12" fill="#a1a1aa">NVR aislado</text>
+            <rect x="570" y="150" width="160" height="96" rx="14" fill="#141418" stroke="#d8b46a"/><text x="650" y="196" text-anchor="middle" font-size="17" font-weight="600" fill="#f4f4f5">Invitados</text><text x="650" y="220" text-anchor="middle" font-size="12" fill="#a1a1aa">solo internet</text>
+            <text x="380" y="286" text-anchor="middle" font-size="14" fill="#a1a1aa" font-family="JetBrains Mono, monospace">≈100 equipos · 4 redes independientes</text>
+          </svg>
+        </div>
+        <div class="info">
+          <div class="meta"><span>06 — PROPUESTA TÉCNICA · 2026</span><span class="award" style="background:rgba(139,124,255,.12);color:#c4bcff;border-color:rgba(139,124,255,.3)">En diseño</span></div>
+          <div class="cats"><span>Redes e infraestructura</span></div>
+          <h3>Propuesta de red para un restaurante con ~100 equipos</h3>
+          <dl>
+            <dt>Reto</dt><dd>Un solo switch reunía todas las áreas del restaurante y, tras cambiar de proveedor, la conexión tardaba en recuperarse: pedidos e impresión en cocina en riesgo.</dd>
+            <dt>Solución</dt><dd>Separar la red en cuatro redes independientes en el MikroTik (administración, cocina y mozos, cámaras e invitados), con diagnóstico previo, migración con plan de retorno y pruebas de aceptación.</dd>
+          </dl>
+          <div class="chips"><span class="chip">MikroTik</span><span class="chip">Segmentación</span><span class="chip">DHCP</span><span class="chip">Firewall</span><span class="chip">Plan de pruebas</span></div>
+          <div class="botones-caso">
+            <a href="proyectos/huancahuasi.html" class="leer">Leer el caso completo <span aria-hidden="true">→</span></a>
+            <a href="propuesta-huancahuasi/" class="leer" target="_blank" rel="noopener">Ver la propuesta <span aria-hidden="true">↗</span></a>
+          </div>
         </div>
       </article>
     </div>
@@ -769,6 +821,20 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
       wins.forEach(w => { const d = +w.dataset.depth; w.style.transform = `translate3d(${-x * d}px, ${-y * d}px, 0)`; });
     }, { passive: true });
   }
+
+  // filtro de proyectos por categoría (mantiene la alternancia izquierda/derecha)
+  const filtros = document.querySelector('.filtro-proyectos');
+  if (filtros) filtros.addEventListener('click', ev => {
+    const b = ev.target.closest('button'); if (!b) return;
+    for (const x of filtros.children) { x.classList.toggle('activo', x === b); x.setAttribute('aria-pressed', x === b); }
+    const f = b.dataset.filtro; let n = 0;
+    document.querySelectorAll('.case').forEach(c => {
+      c.hidden = f !== 'todos' && !c.dataset.cat.split(' ').includes(f);
+      if (c.hidden) return;
+      c.classList.add('in');
+      c.classList.toggle('vis-der', n % 2 === 1); c.classList.toggle('vis-izq', n % 2 === 0); n++;
+    });
+  });
 
   // copy email
   const toast = document.getElementById('toast');

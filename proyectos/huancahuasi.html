@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propuesta de red para un restaurante: Huancahuasi — Caso de estudio · Jose Manuel Güere</title>
+<meta name="description" content="Propuesta técnica para separar en cuatro redes la red de un restaurante de Huancayo con unos 100 equipos: diagnóstico, diseño con MikroTik, migración y pruebas de aceptación.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Propuesta de red para un restaurante: Huancahuasi">
+<meta property="og:description" content="Propuesta técnica para separar en cuatro redes la red de un restaurante de Huancayo con unos 100 equipos: diagnóstico, diseño con MikroTik, migración y pruebas de aceptación.">
+<meta property="og:image" content="https://jguere2811.github.io/og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c8ff4d'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial' font-weight='900' font-size='26' fill='%2309090b'%3EJM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="articulo.css">
+<style>:root{--acento:#8b7cff}.visual{background:radial-gradient(90% 90% at 50% 0%,rgba(139,124,255,.22),transparent 60%),#0e0c16}</style>
+</head>
+<body>
+<div id="progreso"></div>
+<header class="top"><div class="wrap">
+  <a class="logo" href="../"><i>JM</i>Güere</a>
+  <a class="volver" href="../#proyectos">← Todos los proyectos</a>
+  <a class="btn pri sm" href="../#contacto">Hablemos</a>
+</div></header>
+<main>
+<section class="portada">
+  <div class="brillo"></div>
+  <div class="wrap">
+    <span class="eyebrow">CASO DE ESTUDIO · PROPUESTA TÉCNICA · HUANCAYO · 2026</span>
+    <h1>Que el ritmo de la atención no dependa de una <em>red desordenada</em>.</h1>
+    <p class="bajada">Diseñé una propuesta de mejora de red para un restaurante con unos 100 equipos conectados: separar sus áreas en cuatro redes independientes para que los pedidos y la impresión en cocina no se detengan, explicada para que el dueño la entienda y con un plan de pruebas antes de dar el trabajo por terminado.</p>
+    <div class="ficha"><div><small>Tipo</small><b>Propuesta técnica</b></div><div><small>Alcance</small><b>≈100 equipos · 4 redes</b></div><div><small>Equipos</small><b>MikroTik + 3 switches nuevos</b></div><div><small>Estado</small><b>En diseño, pendiente de visita</b></div></div>
+    <div class="visual"><svg viewBox="0 0 760 300" font-family="Inter, sans-serif">
+  <g fill="none" stroke-width="1.8"><path class="flujo-mov" d="M380 92 V120 H110 V150" stroke="#4da3ff"/><path class="flujo-mov" d="M380 92 V120 H290 V150" stroke="#c8ff4d"/><path class="flujo-mov" d="M380 92 V120 H470 V150" stroke="#ff6b9a"/><path class="flujo-mov" d="M380 92 V120 H650 V150" stroke="#d8b46a"/></g>
+  <rect x="300" y="24" width="160" height="68" rx="14" fill="#2a2436" stroke="#8b7cff"/><text x="380" y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#e9e5ff">MikroTik</text><text x="380" y="72" text-anchor="middle" font-size="10.5" fill="#bdb4f0">ether1: internet · DHCP · firewall</text>
+  <rect x="30" y="150" width="160" height="112" rx="14" fill="#141418" stroke="#4da3ff" stroke-opacity=".7"/><text x="110" y="176" text-anchor="middle" font-size="10" fill="#4da3ff" font-family="JetBrains Mono">ether2 · switch A</text><text x="110" y="206" text-anchor="middle" font-size="15" font-weight="600" fill="#f4f4f5">Administración</text><text x="110" y="228" text-anchor="middle" font-size="11" fill="#a1a1aa">PC administrativas</text><rect x="210" y="150" width="160" height="112" rx="14" fill="#141418" stroke="#c8ff4d" stroke-opacity=".7"/><text x="290" y="176" text-anchor="middle" font-size="10" fill="#c8ff4d" font-family="JetBrains Mono">ether3 · switch de 32</text><text x="290" y="206" text-anchor="middle" font-size="15" font-weight="600" fill="#f4f4f5">Cocina y mozos</text><text x="290" y="228" text-anchor="middle" font-size="11" fill="#a1a1aa">terminales · impresoras</text><rect x="390" y="150" width="160" height="112" rx="14" fill="#141418" stroke="#ff6b9a" stroke-opacity=".7"/><text x="470" y="176" text-anchor="middle" font-size="10" fill="#ff6b9a" font-family="JetBrains Mono">ether4 · switch B</text><text x="470" y="206" text-anchor="middle" font-size="15" font-weight="600" fill="#f4f4f5">Videovigilancia</text><text x="470" y="228" text-anchor="middle" font-size="11" fill="#a1a1aa">cámaras + NVR</text><rect x="570" y="150" width="160" height="112" rx="14" fill="#141418" stroke="#d8b46a" stroke-opacity=".7"/><text x="650" y="176" text-anchor="middle" font-size="10" fill="#d8b46a" font-family="JetBrains Mono">ether5 · switch C</text><text x="650" y="206" text-anchor="middle" font-size="15" font-weight="600" fill="#f4f4f5">Invitados</text><text x="650" y="228" text-anchor="middle" font-size="11" fill="#a1a1aa">solo internet</text>
+  <text x="380" y="292" text-anchor="middle" font-size="11.5" fill="#a1a1aa" font-family="JetBrains Mono">4 redes físicas independientes · reglas entre grupos en el MikroTik</text></svg></div>
+  </div>
+</section>
+<div class="wrap cuerpo">
+  <nav class="indice" aria-label="Contenido">
+    <b>CONTENIDO</b>
+    <a href="#contexto"><span>01</span>El contexto</a>
+    <a href="#propuesta"><span>02</span>La propuesta</a>
+    <a href="#diagnostico"><span>03</span>Diagnóstico</a>
+    <a href="#plan"><span>04</span>Plan y pruebas</a>
+    <a href="#demuestra"><span>05</span>Qué demuestra</a>
+  </nav>
+  <article>
+    <section id="contexto">
+      <span class="num-seccion">01 · EL CONTEXTO</span>
+      <h2>Cuando la red falla, el pedido se detiene</h2>
+      <p>Según lo reportado, el local tiene <strong>unos 100 equipos</strong>, un MikroTik y un switch no administrable de 32 puertos que reúne todas las áreas. Tras un cambio de proveedor hubo <strong>demoras para recuperar la conectividad</strong>.</p><div class="pasos"><div class="paso"><div><b>El mozo registra</b><span>Si la terminal no obtiene una dirección válida o no llega al sistema de pedidos, el registro se detiene.</span></div></div><div class="paso"><div><b>Cocina recibe</b><span>Una impresora sin conexión o con la IP cambiada deja un pedido pendiente.</span></div></div><div class="paso"><div><b>El equipo coordina</b><span>La falla obliga a trabajo manual y genera confusiones.</span></div></div><div class="paso"><div><b>Gestión supervisa</b><span>Sin una red documentada es difícil ubicar la falla por área.</span></div></div></div>
+    </section>
+    <section id="propuesta">
+      <span class="num-seccion">02 · LA PROPUESTA</span>
+      <h2>Cuatro redes, cada una con su camino</h2>
+      <p>Cada grupo de equipos tendrá su propia conexión al MikroTik y sus propios permisos. Se aprovecha lo instalado: el switch actual de 32 puertos se queda con cocina, mozos y el sistema de pedidos, y se agregan tres switches.</p><div class="tabla"><table><thead><tr><th>Puerto</th><th>Red</th><th>Equipos</th><th>Rango (ilustrativo)</th></tr></thead><tbody>
+      <tr><td>ether2</td><td>Administración</td><td>PC administrativas</td><td>192.168.10.0/24</td></tr>
+      <tr><td>ether3</td><td>Cocina y mozos</td><td>Terminales, sistema de pedidos, impresoras</td><td>192.168.20.0/24</td></tr>
+      <tr><td>ether4</td><td>Videovigilancia</td><td>Cámaras y NVR</td><td>192.168.30.0/24</td></tr>
+      <tr><td>ether5</td><td>Invitados</td><td>Puntos Wi-Fi dedicados (solo internet)</td><td>192.168.40.0/24</td></tr></tbody></table></div><ul class="lista"><li><strong>Menos exposición:</strong> el Wi-Fi de clientes no podrá llegar a operación, administración, cámaras ni al router.</li><li><strong>Menos ruido:</strong> el tráfico de descubrimiento de un grupo queda dentro de su red.</li><li><strong>Independiente del proveedor:</strong> la red local conserva sus rangos aunque cambie el internet.</li><li><strong>Documentada:</strong> diagrama, tabla de direcciones y respaldo para encontrar fallas por área.</li></ul>
+    </section>
+    <section id="diagnostico">
+      <span class="num-seccion">03 · DIAGNÓSTICO</span>
+      <h2>Medir antes de suponer</h2>
+      <div class="cita">Cien equipos no demuestran por sí solos que el DHCP esté saturado.</div><p>Antes de intervenir se mide la asignación de direcciones y se revisan conflictos, servidores DHCP duplicados, la capacidad del rango y los enlaces. La propuesta también es honesta con sus límites: <strong>no promete aumentar la velocidad contratada</strong> ni eliminar toda falla, porque el router, la energía y algunos enlaces siguen siendo puntos compartidos.</p>
+    </section>
+    <section id="plan">
+      <span class="num-seccion">04 · PLAN Y PRUEBAS</span>
+      <h2>Se entrega con pruebas, no con promesas</h2>
+      <div class="pasos"><div class="paso"><div><b>Se verifica antes de comprar</b><span>Inventario, ubicación del sistema de pedidos, cableado y capacidad de los equipos.</span></div></div><div class="paso"><div><b>Se migra en horario acordado</b><span>Con respaldo previo y un plan para volver atrás si una prueba falla.</span></div></div><div class="paso"><div><b>Se acepta con pruebas</b><span>Pedido desde cada terminal, impresión en cocina, acceso autorizado a las cámaras, bloqueo desde invitados y funcionamiento local sin internet.</span></div></div></div><p>Como alternativa se puede cotizar un switch administrable con <strong>VLAN</strong>, que aprovecha enlaces compartidos y permite separar más áreas. La cotización queda abierta hasta la visita técnica.</p>
+    </section>
+    <section id="demuestra">
+      <span class="num-seccion">05 · QUÉ DEMUESTRA</span>
+      <h2>Lo que este caso demuestra</h2>
+      <ul class="lista"><li><strong>Explicar tecnología a un cliente no técnico:</strong> la propuesta habla de pedidos e impresoras, no solo de subredes.</li><li><strong>Diseño con criterio:</strong> segmentación, firewall, DHCP por red y alternativa con VLAN.</li><li><strong>Honestidad profesional:</strong> separa lo reportado de lo verificado y define cómo se aceptará el trabajo.</li></ul><div class="nota"><b>Estado:</b> propuesta preliminar; la implementación y sus resultados están pendientes. La marca pertenece al restaurante y su mención no implica patrocinio.</div><div class="acciones"><a class="btn pri" href="../propuesta-huancahuasi/" target="_blank" rel="noopener">Ver la propuesta completa ↗</a><a class="btn" href="https://github.com/JGuere2811/propuesta-huancahuasi" target="_blank" rel="noopener">Repositorio en GitHub</a></div>
+    </section>
+  </article>
+</div>
+<section class="cierre"><div class="wrap">
+  <div class="tarjeta">
+    <div><h2>¿Te sirve algo así?</h2><p>Puedo ayudarte con webs, reportes, automatizaciones e infraestructura, con resultados que se pueden medir.</p></div>
+    <div class="acciones"><a class="btn pri" href="../#contacto">Hablemos</a><a class="btn" href="../cv-jose-manuel-guere.pdf" download>Descargar CV</a></div>
+  </div>
+  <div class="siguientes"><a href="redes-corporativas.html"><small>OTRO CASO DE REDES →</small><b>Redes corporativas y soporte TI</b></a><a href="anubis.html"><small>PROYECTO DESTACADO →</small><b>Anubis: credenciales cifradas y métricas</b></a></div>
+</div></section>
+</main>
+<footer><div class="wrap"><span>© <span id="anio"></span> Jose Manuel Güere Casas</span><a href="../" class="volver">Volver al portafolio</a></div></footer>
+<script src="articulo.js"></script>
+</body>
+</html>
