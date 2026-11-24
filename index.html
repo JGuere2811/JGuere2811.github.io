@@ -478,8 +478,8 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
     </div>
 
     <div class="filtro-proyectos rv" role="group" aria-label="Filtrar proyectos por categoría">
-      <button type="button" class="activo" aria-pressed="true" data-filtro="todos">Todos <span>6</span></button>
-      <button type="button" aria-pressed="false" data-filtro="datos">Datos y BI <span>3</span></button>
+      <button type="button" class="activo" aria-pressed="true" data-filtro="todos">Todos <span>7</span></button>
+      <button type="button" aria-pressed="false" data-filtro="datos">Datos y BI <span>4</span></button>
       <button type="button" aria-pressed="false" data-filtro="web">Desarrollo web <span>2</span></button>
       <button type="button" aria-pressed="false" data-filtro="automatizacion">Automatización e IA <span>1</span></button>
       <button type="button" aria-pressed="false" data-filtro="redes">Redes e infraestructura <span>2</span></button>
@@ -517,6 +517,36 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
         </div>
       </article>
 
+      <!-- GA4 BigQuery -->
+      <article class="case rv" data-cat="datos">
+        <div class="visual v1">
+          <div class="browser">
+            <div class="bar"><i></i><i></i><i></i><span class="url">bigquery · ga4_ecommerce</span></div>
+            <div style="padding:16px;display:grid;gap:8px;font-size:.74rem;color:#a1a1aa">
+              <code style="font-family:var(--mono);color:#4dd4ff;font-size:.7rem">SELECT etapa, COUNT(DISTINCT user_pseudo_id)</code>
+              <div style="display:grid;grid-template-columns:110px 1fr;gap:6px 10px;align-items:center">
+                <span>Vio producto</span><i style="height:12px;border-radius:4px;background:#4dd4ff;width:100%"></i>
+                <span>Carrito</span><i style="height:12px;border-radius:4px;background:#4dd4ff;opacity:.85;width:19.7%"></i>
+                <span>Pago</span><i style="height:12px;border-radius:4px;background:#4dd4ff;opacity:.7;width:8%"></i>
+                <span>Compra</span><i style="height:12px;border-radius:4px;background:#c8ff4d;width:3.2%"></i>
+              </div>
+              <span style="font-family:var(--mono);font-size:.68rem">8 de cada 10 no llegan al carrito</span>
+            </div>
+          </div>
+        </div>
+        <div class="info">
+          <div class="meta"><span>02 — PROYECTO PROPIO · 2026</span><span class="award" style="background:rgba(77,212,255,.12);color:#4dd4ff;border-color:rgba(77,212,255,.3)">Avance 2 de 3</span></div>
+          <div class="cats"><span>Datos y BI</span></div>
+          <h3>¿Qué canales traen clientes que sí compran? Análisis de GA4 en BigQuery</h3>
+          <dl>
+            <dt>Reto</dt><dd>Saber qué canales de una tienda en línea traen compradores y en qué paso se pierde la gente, con 3 meses de datos reales de Google Analytics 4.</dd>
+            <dt>Solución</dt><dd>Consultas SQL en BigQuery con embudo secuencial por usuario, comparación de canales y dispositivos y cohortes de retención. Hallazgo clave: la fuga está antes del carrito, no en el pago.</dd>
+          </dl>
+          <div class="chips"><span class="chip">SQL</span><span class="chip">BigQuery</span><span class="chip">GA4</span><span class="chip">Cohortes</span></div>
+          <a href="proyectos/analisis-ga4.html" class="leer">Leer el caso completo <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+
       <!-- 1 -->
       <article class="case rv" data-cat="datos web">
         <div class="visual v1">
@@ -541,7 +571,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
           </div>
         </div>
         <div class="info">
-          <div class="meta"><span>02 — FREELANCE · 2026</span></div>
+          <div class="meta"><span>03 — FREELANCE · 2026</span></div>
           <div class="cats"><span>Datos y BI</span><span>Desarrollo web</span></div>
           <h3>Sitio web + reportes de tráfico en Power BI</h3>
           <dl>
@@ -577,7 +607,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
           </div>
         </div>
         <div class="info">
-          <div class="meta"><span>03 — GRUPO PAMD · 2024–2025</span></div>
+          <div class="meta"><span>04 — GRUPO PAMD · 2024–2025</span></div>
           <div class="cats"><span>Automatización e IA</span><span>Datos y BI</span></div>
           <h3>Automatización de registros operativos con IA</h3>
           <dl>
@@ -603,7 +633,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
           </svg>
         </div>
         <div class="info">
-          <div class="meta"><span>04 — UNIVERSIDAD CONTINENTAL · 2024</span><span class="award">🏆 1.er puesto</span></div>
+          <div class="meta"><span>05 — UNIVERSIDAD CONTINENTAL · 2024</span><span class="award">🏆 1.er puesto</span></div>
           <div class="cats"><span>Innovación</span></div>
           <h3>Simulador de cirugía con realidad virtual</h3>
           <dl>
@@ -633,7 +663,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
           </svg>
         </div>
         <div class="info">
-          <div class="meta"><span>05 — GRUPO PAMD · 2024–2025</span></div>
+          <div class="meta"><span>06 — GRUPO PAMD · 2024–2025</span></div>
           <div class="cats"><span>Redes e infraestructura</span></div>
           <h3>Redes corporativas y soporte TI</h3>
           <dl>
@@ -662,7 +692,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 30px;overflow:hidden}
           </svg>
         </div>
         <div class="info">
-          <div class="meta"><span>06 — PROPUESTA TÉCNICA · 2026</span><span class="award" style="background:rgba(139,124,255,.12);color:#c4bcff;border-color:rgba(139,124,255,.3)">En diseño</span></div>
+          <div class="meta"><span>07 — PROPUESTA TÉCNICA · 2026</span><span class="award" style="background:rgba(139,124,255,.12);color:#c4bcff;border-color:rgba(139,124,255,.3)">En diseño</span></div>
           <div class="cats"><span>Redes e infraestructura</span></div>
           <h3>Propuesta de red para un restaurante con ~100 equipos</h3>
           <dl>

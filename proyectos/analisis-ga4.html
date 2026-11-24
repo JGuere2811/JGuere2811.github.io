@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análisis de GA4 en BigQuery — Caso de estudio · Jose Manuel Güere</title>
+<meta name="description" content="Con SQL en BigQuery analicé 3 meses de datos de Google Analytics 4 de una tienda en línea: qué canales traen compradores, dónde se pierde la gente y cuántos vuelven.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="¿Qué canales traen clientes que sí compran? · Análisis de GA4 en BigQuery">
+<meta property="og:description" content="Con SQL en BigQuery analicé 3 meses de datos de Google Analytics 4 de una tienda en línea: qué canales traen compradores, dónde se pierde la gente y cuántos vuelven.">
+<meta property="og:image" content="https://jguere2811.github.io/og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c8ff4d'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial' font-weight='900' font-size='26' fill='%2309090b'%3EJM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="articulo.css">
+<style>:root{--acento:#4dd4ff}.visual{background:radial-gradient(90% 90% at 20% 10%,rgba(77,212,255,.2),transparent 60%),#0b1114}figure img{display:block;width:100%;height:auto;border-radius:12px}</style>
+</head>
+<body>
+<div id="progreso"></div>
+<header class="top"><div class="wrap">
+  <a class="logo" href="../"><i>JM</i>Güere</a>
+  <a class="volver" href="../#proyectos">← Todos los proyectos</a>
+  <a class="btn pri sm" href="../#contacto">Hablemos</a>
+</div></header>
+<main>
+<section class="portada">
+  <div class="brillo"></div>
+  <div class="wrap">
+    <span class="eyebrow">CASO DE ESTUDIO · PROYECTO PROPIO · 2026</span>
+    <h1>¿Qué canales traen clientes que <em>sí compran</em>?</h1>
+    <p class="bajada">Analicé con SQL en BigQuery tres meses de datos reales de Google Analytics 4 de una tienda en línea (Black Friday y Navidad incluidos) para responder dónde invertir, en qué paso se pierde la gente y cuántos clientes nuevos vuelven.</p>
+    <div class="ficha"><div><small>Mi rol</small><b>Analista de datos</b></div><div><small>Datos</small><b>GA4 · 360 mil sesiones</b></div><div><small>Herramientas</small><b>SQL · BigQuery · GA4</b></div><div><small>Estado</small><b>Avance 2 de 3</b></div></div>
+    <div class="visual"><svg viewBox="0 0 760 260" font-family="Inter, sans-serif">
+      <text x="30" y="40" font-size="12" fill="#a1a1aa" font-family="JetBrains Mono">embudo paso a paso · 61 252 personas que vieron un producto</text>
+      <g font-size="13">
+        <rect x="30" y="56" width="700" height="24" rx="6" fill="#4dd4ff" opacity="1"/><text x="40" y="73" fill="#09090b" font-weight="600">Vio un producto · 100 %</text>
+        <rect x="30" y="86" width="138" height="24" rx="6" fill="#4dd4ff" opacity="0.85"/><text x="180" y="103" fill="#f4f4f5">Añadió al carrito · 19,7 %  <tspan fill="#ff6b9a">← la mayor fuga</tspan></text>
+        <rect x="30" y="116" width="56" height="24" rx="6" fill="#4dd4ff" opacity="0.75"/><text x="98" y="133" fill="#f4f4f5">Empezó a pagar · 8,0 %</text>
+        <rect x="30" y="146" width="35" height="24" rx="6" fill="#4dd4ff" opacity="0.65"/><text x="77" y="163" fill="#f4f4f5">Datos de envío · 5,0 %</text>
+        <rect x="30" y="176" width="28" height="24" rx="6" fill="#4dd4ff" opacity="0.6"/><text x="70" y="193" fill="#f4f4f5">Datos de pago · 4,0 %</text>
+        <rect x="30" y="206" width="23" height="24" rx="6" fill="#c8ff4d" opacity="1"/><text x="65" y="223" fill="#f4f4f5">Compró · 3,2 %</text>
+      </g>
+      <text x="730" y="244" text-anchor="end" font-size="11" fill="#71717a" font-family="JetBrains Mono">fuente: GA4 sample ecommerce · BigQuery</text></svg></div>
+  </div>
+</section>
+<div class="wrap cuerpo">
+  <nav class="indice" aria-label="Contenido">
+    <b>CONTENIDO</b>
+    <a href="#pregunta"><span>01</span>La pregunta</a>
+    <a href="#metodo"><span>02</span>Cómo lo hice</a>
+    <a href="#embudo"><span>03</span>Dónde se pierde la gente</a>
+    <a href="#canales"><span>04</span>Canales y dispositivos</a>
+    <a href="#retencion"><span>05</span>¿Vuelven?</a>
+    <a href="#recomendaciones"><span>06</span>Qué haría</a>
+    <a href="#demuestra"><span>07</span>Qué demuestra</a>
+  </nav>
+  <article>
+    <section id="pregunta">
+      <span class="num-seccion">01 · LA PREGUNTA</span>
+      <h2>Una pregunta de negocio, no un ejercicio de SQL</h2>
+      <p>Una tienda en línea invierte en varios canales: búsqueda orgánica, anuncios de Google, referencias, correo. La pregunta que haría cualquier gerente es simple: <strong>¿qué canales traen visitas que terminan en compra, y en qué paso del camino se pierde la gente?</strong></p>
+      <p>Para responderla usé el dataset público de Google Analytics 4 de la <em>Google Merchandise Store</em> en BigQuery: datos reales (ofuscados por Google) del 1 de noviembre de 2020 al 31 de enero de 2021.</p>
+      <div class="nota"><b>Resultado en una línea:</b> solo el 1,6 % de los visitantes compra, y el problema no está en el pago sino <b>antes del carrito</b>: 8 de cada 10 personas que miran un producto no lo añaden.</div>
+    </section>
+    <section id="metodo">
+      <span class="num-seccion">02 · CÓMO LO HICE</span>
+      <h2>Cinco consultas, un informe por avances</h2>
+      <div class="pasos"><div class="paso"><div><b>Explorar los eventos</b><span>Qué eventos registra GA4 (vista, carrito, pago, compra) y cuántos usuarios genera cada uno.</span></div></div><div class="paso"><div><b>Comparar canales</b><span>Usuarios, sesiones, compras, ingresos y conversión por canal de adquisición.</span></div></div><div class="paso"><div><b>Comparar dispositivos</b><span>Computadora, celular y tablet: cuánto tráfico trae cada uno y cuánto convierte.</span></div></div><div class="paso"><div><b>Embudo secuencial</b><span>Un paso solo cuenta si ocurrió <em>después</em> del anterior, por usuario. Con funciones de ventana y <code>JOIN</code>.</span></div></div><div class="paso"><div><b>Cohortes de retención</b><span>De los usuarios nuevos de cada semana, cuántos vuelven en los días 1–7, 8–14 y 15–30.</span></div></div></div>
+      <p>Cada resultado se guarda en CSV y un script genera los gráficos, así el análisis se puede reproducir de punta a punta. Todas las consultas leen menos de 1 GB: caben en el modo gratuito de BigQuery.</p>
+    </section>
+    <section id="embudo">
+      <span class="num-seccion">03 · DÓNDE SE PIERDE LA GENTE</span>
+      <h2>La fuga está antes del carrito</h2>
+      <figure><img src="img/ga4-embudo-secuencial.svg" alt="Embudo paso a paso: de 61 252 personas que vieron un producto, 19,7 % añadió al carrito, y de ahí cada paso retiene entre 40 % y 80 %." loading="lazy"><figcaption>Embudo secuencial por usuario. Cada barra cuenta solo a quienes completaron el paso anterior.</figcaption></figure>
+      <ul class="lista"><li><strong>80 % de quienes ven un producto no lo añade al carrito.</strong> Es la mayor pérdida y donde más rinde mejorar (fotos, precio visible, envío).</li><li><strong>6 de cada 10 carritos nunca empiezan el pago.</strong></li><li><strong>Una vez en el pago, 8 de cada 10 completan cada paso:</strong> el proceso de pago funciona bien.</li></ul>
+      <div class="nota"><b>Me corregí a mí mismo:</b> en el avance 1 un embudo simple sugería que se perdía el 41 % entre el envío y el pago. Al hacerlo secuencial, por usuario, la pérdida real es del 20 %. Lo dejé documentado en el informe.</div>
+    </section>
+    <section id="canales">
+      <span class="num-seccion">04 · CANALES Y DISPOSITIVOS</span>
+      <h2>Más visitas no es más ventas</h2>
+        <figure><img src="img/ga4-canales-conversion.svg" alt="Conversión por canal: los anuncios pagados de Google convierten 1,06 %, por debajo del resto." loading="lazy"><figcaption>Conversión por canal.</figcaption></figure>
+        <figure><img src="img/ga4-dispositivos.svg" alt="El celular trae el 40 % de las visitas y convierte 1,64 %, frente a 1,54 % en computadora." loading="lazy"><figcaption>Sesiones y conversión por dispositivo.</figcaption></figure>
+      <div class="tabla"><table><thead><tr><th>Canal</th><th>Sesiones</th><th>Conversión</th></tr></thead><tbody>
+        <tr><td>Google orgánico</td><td>112 678</td><td>1,29 %</td></tr>
+        <tr><td>Directo</td><td>83 459</td><td>1,50 %</td></tr>
+        <tr><td>Autorreferencia (la propia tienda)</td><td>28 849</td><td>2,43 %</td></tr>
+        <tr><td>Anuncios de Google (cpc)</td><td>15 617</td><td>1,06 %</td></tr>
+      </tbody></table></div>
+      <ul class="lista"><li><strong>Google orgánico trae el 31 % de las visitas</strong>, pero convierte por debajo del promedio.</li><li><strong>Los anuncios de Google tienen la peor conversión (1,06 %) y el ticket más bajo (USD 54,6):</strong> es el primer canal a revisar.</li><li><strong>El 8 % de las sesiones son autorreferencias</strong>, un error de medición que le quita el crédito a los canales reales.</li><li><strong>El celular ya no es secundario:</strong> 40 % de las visitas y convierte igual o mejor que la computadora.</li></ul>
+    </section>
+    <section id="retencion">
+      <span class="num-seccion">05 · ¿VUELVEN?</span>
+      <h2>Solo 1 de cada 10 clientes nuevos regresa</h2>
+      <figure><img src="img/ga4-retencion-cohortes.svg" alt="Retención a 30 días por cohorte semanal: noviembre entre 12 % y 14,5 %, diciembre entre 6,7 % y 9,2 %." loading="lazy"><figcaption>Cohortes semanales de usuarios nuevos y su retorno en 30 días.</figcaption></figure>
+      <p>En promedio vuelve el <strong>10,7 %</strong> en 30 días, casi todos en la primera semana. Los usuarios de noviembre retienen hasta el doble (<strong>12,9 %</strong>) que los de diciembre (<strong>8,3 %</strong>): quien compra un regalo navideño rara vez regresa.</p>
+    </section>
+    <section id="recomendaciones">
+      <span class="num-seccion">06 · QUÉ HARÍA</span>
+      <h2>De los datos a las decisiones</h2>
+      <ul class="lista"><li><strong>Atacar la página de producto antes que el pago:</strong> es donde está el 80 % de la fuga.</li><li><strong>Revisar las campañas de Google Ads</strong> antes de subir el presupuesto: hoy son el canal que peor convierte.</li><li><strong>Corregir las autorreferencias</strong> en la configuración de GA4 para medir bien cada canal.</li><li><strong>Una campaña de correo en enero</strong> para los compradores de diciembre, la cohorte que menos vuelve.</li></ul>
+    </section>
+    <section id="demuestra">
+      <span class="num-seccion">07 · QUÉ DEMUESTRA</span>
+      <h2>Lo que este proyecto demuestra</h2>
+      <ul class="lista"><li><strong>SQL de verdad:</strong> tablas por día, funciones de ventana, <code>JOIN</code>, cohortes y embudos por usuario en BigQuery.</li><li><strong>Pensamiento de negocio:</strong> cada consulta responde una pregunta que un gerente haría.</li><li><strong>Rigor:</strong> limitaciones explicadas y una cifra propia corregida cuando el método mejoró.</li><li><strong>Reproducible:</strong> consultas, resultados y gráficos públicos en GitHub.</li></ul>
+      <div class="chips"><span class="chip">SQL</span><span class="chip">BigQuery</span><span class="chip">Google Analytics 4</span><span class="chip">Funciones de ventana</span><span class="chip">Cohortes</span><span class="chip">Embudos</span></div>
+      <p><a href="https://github.com/JGuere2811/analisis-marketing-ga4">Ver el repositorio en GitHub →</a> · <a href="https://github.com/JGuere2811/analisis-marketing-ga4/blob/main/informe.md">Leer el informe completo →</a></p>
+      <div class="nota"><b>Próximo avance:</b> dashboard con resumen, embudo y canales, y un informe de una página con las conclusiones.</div>
+    </section>
+  </article>
+</div>
+<section class="cierre"><div class="wrap">
+  <div class="tarjeta">
+    <div><h2>¿Te sirve algo así?</h2><p>Puedo analizar los datos de tu web o tu tienda y convertirlos en decisiones concretas.</p></div>
+    <div class="acciones"><a class="btn pri" href="../#contacto">Hablemos</a><a class="btn" href="../cv-jose-manuel-guere.pdf" download>Descargar CV</a></div>
+  </div>
+  <div class="siguientes"><a href="reportes-trafico.html"><small>SIGUIENTE CASO →</small><b>Sitio web + reportes de tráfico en Power BI</b></a><a href="anubis.html"><small>PROYECTO DESTACADO →</small><b>Anubis: credenciales cifradas y métricas</b></a></div>
+</div></section>
+</main>
+<footer><div class="wrap"><span>© <span id="anio"></span> Jose Manuel Güere Casas</span><a href="../" class="volver">Volver al portafolio</a></div></footer>
+<script src="articulo.js"></script>
+</body>
+</html>
