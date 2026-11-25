@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard GA4 · Tienda en línea · Jose Manuel Güere</title>
+<meta name="description" content="Dashboard interactivo: canales, embudo de compra, dispositivos y retención de una tienda en línea, con datos de Google Analytics 4 analizados con SQL en BigQuery.">
+<meta property="og:title" content="Dashboard GA4 · ¿Qué canales traen clientes que sí compran?">
+<meta property="og:image" content="https://jguere2811.github.io/og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c8ff4d'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial' font-weight='900' font-size='26' fill='%2309090b'%3EJM%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  color-scheme:light;
+  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --s1:#2a78d6; --s1-soft:#86b6ef; --s2:#eb6834;
+  --good:#006300;
+  --seq:#cde2fb,#b7d3f6,#9ec5f4,#86b6ef,#6da7ec,#5598e7,#3987e5,#2a78d6,#256abf,#1c5cab,#184f95;
+}
+@media (prefers-color-scheme:dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme:dark;
+    --page:#0d0d0d; --surface:#1a1a19; --ink:#f0efec; --ink-2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --s1:#3987e5; --s1-soft:#1c5cab; --s2:#d95926; --good:#0ca30c;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --page:#0d0d0d; --surface:#1a1a19; --ink:#f0efec; --ink-2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+  --s1:#3987e5; --s1-soft:#1c5cab; --s2:#d95926; --good:#0ca30c;
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--page);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--s1)}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 16px 48px}
+header.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:22px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font-size:clamp(22px,3.2vw,30px);line-height:1.2;letter-spacing:-.01em;margin:6px 0 6px}
+.sub{color:var(--ink-2);max-width:720px}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--ink);padding:7px 12px;border-radius:8px;font-size:13px;text-decoration:none;cursor:pointer;font-family:inherit}
+.btn:hover{border-color:var(--axis)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 18px 14px;min-width:0}
+.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
+@media (max-width:900px){.c3{grid-column:span 6}.c4,.c5,.c6,.c7,.c8{grid-column:span 12}}
+@media (max-width:520px){.c3{grid-column:span 12}}
+.kpi small{display:block;color:var(--ink-2);font-size:13px}
+.kpi b{display:block;font-size:30px;line-height:1.15;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:4px}
+.kpi span{display:block;color:var(--muted);font-size:12.5px;margin-top:4px}
+.card h2{font-size:16px;font-weight:650;line-height:1.3}
+.card .q{color:var(--ink-2);font-size:13px;margin:2px 0 12px}
+.head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink-2);font:inherit;font-size:12.5px;padding:5px 10px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--border)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.lbl{fill:var(--ink-2);font-size:12px}
+.val{fill:var(--ink);font-size:12px;font-variant-numeric:tabular-nums}
+.mut{fill:var(--muted);font-size:11px}
+.gl{stroke:var(--grid);stroke-width:1}
+.ax{stroke:var(--axis);stroke-width:1}
+.bar{fill:var(--s1)}
+.bar.hi{fill:var(--s2)}
+.hit{fill:transparent;cursor:default}
+.hit:hover + .bar, .row:hover .bar{opacity:.85}
+.note{font-size:13px;color:var(--ink-2);border-top:1px solid var(--grid);margin-top:10px;padding-top:10px}
+.note b{color:var(--ink)}
+details{margin-top:8px}
+summary{font-size:12.5px;color:var(--muted);cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--grid)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:600;font-size:12px}
+.heat td{text-align:center;border:2px solid var(--surface);border-radius:4px;padding:8px 6px}
+.heat td:first-child{text-align:left;color:var(--ink-2);background:none}
+.heat td{white-space:nowrap}
+@media (max-width:520px){.heat{font-size:11.5px}.heat td{padding:7px 3px}.heat th{font-size:10.5px}}
+.heat th{text-align:center}.heat th:first-child{text-align:left}
+.legend{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:8px}
+.ramp{display:inline-flex;height:10px;border-radius:3px;overflow:hidden}
+.ramp i{width:18px}
+.findings{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:6px}
+.finding{border-left:3px solid var(--s1);padding:2px 0 2px 12px}
+.finding b{display:block;font-size:14px}
+.finding span{font-size:13px;color:var(--ink-2)}
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);font-size:12.5px;line-height:1.4;padding:8px 10px;border-radius:8px;max-width:240px;opacity:0;transition:opacity .12s;z-index:9;font-variant-numeric:tabular-nums}
+#tip b{display:block;font-size:13px}
+footer{color:var(--muted);font-size:12.5px;margin-top:22px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Dashboard · Google Analytics 4 + BigQuery · nov 2020 – ene 2021</div>
+      <h1>¿Qué canales traen clientes que sí compran?</h1>
+      <p class="sub">Tienda en línea (Google Merchandise Store, datos públicos de GA4). Pasa el mouse sobre las barras para ver el detalle de cada dato.</p>
+    </div>
+    <div class="links">
+      <a class="btn" href="analisis-ga4.html">← Caso de estudio</a>
+      <a class="btn" href="https://github.com/JGuere2811/analisis-marketing-ga4">Código SQL en GitHub</a>
+      <button class="btn" id="tema" type="button" aria-label="Cambiar entre modo claro y oscuro">◐ Tema</button>
+    </div>
+  </header>
+
+  <section class="grid" aria-label="Indicadores principales">
+    <div class="card kpi c3"><small>Sesiones</small><b>360,129</b><span>3 meses · 274 mil usuarios</span></div>
+    <div class="card kpi c3"><small>Compras</small><b>5,692</b><span>Conversión 1.58 % de las sesiones</span></div>
+    <div class="card kpi c3"><small>Ingresos</small><b>USD 362 mil</b><span>Ticket promedio USD 63.6</span></div>
+    <div class="card kpi c3"><small>Usuarios nuevos que vuelven</small><b>10.7 %</b><span>en los primeros 30 días</span></div>
+
+    <div class="card c7">
+      <h2>8 de cada 10 personas que ven un producto no lo añaden al carrito</h2>
+      <p class="q">Embudo por usuario: cada paso cuenta solo a quien completó el anterior</p>
+      <div id="funnel"></div>
+      <p class="note"><b>Dónde actuar:</b> la página de producto. Una vez dentro del pago, 8 de cada 10 completan cada paso.</p>
+      <details><summary>Ver tabla</summary><div id="funnel-t"></div></details>
+    </div>
+
+    <div class="card c5">
+      <h2>El celular ya no es secundario</h2>
+      <p class="q">Participación en las sesiones y conversión por dispositivo</p>
+      <div id="dev-share"></div>
+      <div id="dev-conv" style="margin-top:14px"></div>
+      <p class="note"><b>40 % de las visitas</b> llegan desde el celular y convierten igual o mejor que en computadora.</p>
+      <details><summary>Ver tabla</summary><div id="dev-t"></div></details>
+    </div>
+
+    <div class="card c12">
+      <div class="head">
+        <div>
+          <h2 id="ch-title">Canales de adquisición</h2>
+          <p class="q" id="ch-q"></p>
+        </div>
+        <div class="seg" role="group" aria-label="Métrica de canales">
+          <button type="button" data-m="sesiones" aria-pressed="true">Sesiones</button>
+          <button type="button" data-m="conversion" aria-pressed="false">Conversión</button>
+          <button type="button" data-m="ingresos" aria-pressed="false">Ingresos</button>
+          <button type="button" data-m="ticket" aria-pressed="false">Ticket</button>
+        </div>
+      </div>
+      <div id="channels"></div>
+      <p class="note" id="ch-note"></p>
+      <details><summary>Ver tabla</summary><div id="ch-t"></div></details>
+    </div>
+
+    <div class="card c7">
+      <h2>Los clientes de diciembre vuelven la mitad que los de noviembre</h2>
+      <p class="q">De los usuarios nuevos de cada semana, % que vuelve a la tienda</p>
+      <div id="cohorts"></div>
+      <div class="legend">menos <span class="ramp" id="ramp"></span> más vuelven</div>
+    </div>
+
+    <div class="card c5">
+      <h2>Qué haría con estos datos</h2>
+      <div class="findings" style="grid-template-columns:1fr">
+        <div class="finding"><b>Mejorar la página de producto</b><span>Ahí se pierde el 80 % de la gente: fotos, precio y costo de envío visibles.</span></div>
+        <div class="finding"><b>Revisar Google Ads antes de invertir más</b><span>Es el canal con menor conversión (1.06 %) y el ticket más bajo (USD 54.6).</span></div>
+        <div class="finding"><b>Corregir las autorreferencias</b><span>El 8 % de las sesiones se atribuyen a la propia tienda: un error de medición en GA4.</span></div>
+        <div class="finding"><b>Campaña de correo en enero</b><span>Para los compradores de diciembre, la cohorte que menos vuelve.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Fuente: bigquery-public-data.ga4_obfuscated_sample_ecommerce · Consultas SQL propias</span>
+    <span>Jose Manuel Güere Casas · <a href="../">jguere2811.github.io</a></span>
+  </footer>
+</div>
+<div id="tip" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  // Tema: respeta el sistema, y el botón alterna
+  var root=document.documentElement;
+  try{var t=localStorage.getItem('tema-ga4'); if(t) root.setAttribute('data-theme',t);}catch(e){}
+  document.getElementById('tema').addEventListener('click',function(){
+    var dark=root.getAttribute('data-theme')==='dark'||(!root.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme: dark)').matches);
+    var n=dark?'light':'dark'; root.setAttribute('data-theme',n);
+    try{localStorage.setItem('tema-ga4',n);}catch(e){}
+    drawCohorts();
+  });
+
+  var fmt=function(n,d){return n.toLocaleString('en-US',{minimumFractionDigits:d||0,maximumFractionDigits:d||0});};
+  var tip=document.getElementById('tip');
+  function showTip(e,html){tip.innerHTML=html;tip.style.opacity=1;moveTip(e);}
+  function moveTip(e){var x=e.clientX+14,y=e.clientY+14,w=tip.offsetWidth,h=tip.offsetHeight;
+    if(x+w>innerWidth-8)x=e.clientX-w-14; if(y+h>innerHeight-8)y=e.clientY-h-14; tip.style.left=x+'px';tip.style.top=y+'px';}
+  function hideTip(){tip.style.opacity=0;}
+  function table(head,rows){return '<table><thead><tr>'+head.map(function(h){return '<th>'+h+'</th>'}).join('')+'</tr></thead><tbody>'+rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table>';}
+  var NS='http://www.w3.org/2000/svg';
+  function el(n,a,txt){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+  function rounded(x,y,w,h,r){ // extremo derecho redondeado, anclado al eje
+    r=Math.min(r,w,h/2); if(w<=0) return '';
+    return 'M'+x+','+y+'H'+(x+w-r)+'Q'+(x+w)+','+y+' '+(x+w)+','+(y+r)+'V'+(y+h-r)+'Q'+(x+w)+','+(y+h)+' '+(x+w-r)+','+(y+h)+'H'+x+'Z';}
+
+  // Barras horizontales genéricas
+  function hbars(host,data,o){
+    var W=Math.max(host.clientWidth||o.width||640,280),lw=Math.min(o.labelW||150,Math.round(W*0.36)),vw=Math.min(o.valW||110,Math.round(W*0.3)),bh=o.barH||18,gap=o.gap||12,top=o.top||4;
+    var H=top+data.length*(bh+gap)+(o.axis?18:0);
+    var svg=el('svg',{viewBox:'0 0 '+W+' '+H,role:'img','aria-label':o.aria});
+    var x0=lw,x1=W-vw,max=o.max||Math.max.apply(null,data.map(function(d){return d.v}));
+    var sx=function(v){return (x1-x0)*v/max;};
+    if(o.ticks) o.ticks.forEach(function(t){var x=x0+sx(t);svg.appendChild(el('line',{x1:x,x2:x,y1:0,y2:H-18,class:'gl'}));svg.appendChild(el('text',{x:x,y:H-4,'text-anchor':'middle',class:'mut'},o.tickFmt(t)));});
+    if(o.ref!=null){var rx=x0+sx(o.ref);svg.appendChild(el('line',{x1:rx,x2:rx,y1:0,y2:top+data.length*(bh+gap)-gap/2,stroke:'var(--ink-2)','stroke-dasharray':'3 3','stroke-width':1}));svg.appendChild(el('text',{x:rx+4,y:top+data.length*(bh+gap)+12,class:'mut'},o.refLbl));}
+    data.forEach(function(d,i){
+      var y=top+i*(bh+gap),g=el('g',{class:'row'});
+      g.appendChild(el('text',{x:lw-10,y:y+bh/2+4,'text-anchor':'end',class:'lbl'},(W<560&&d.s)?d.s:d.l));
+      g.appendChild(el('path',{d:rounded(x0,y,Math.max(sx(d.v),2),bh,4),class:'bar'+(d.hi?' hi':'')}));
+      g.appendChild(el('text',{x:x0+sx(d.v)+8,y:y+bh/2+4,class:'val'},d.t));
+      var hit=el('rect',{x:0,y:y-gap/2,width:W,height:bh+gap,class:'hit'});
+      hit.addEventListener('mouseenter',function(e){showTip(e,d.tip)});hit.addEventListener('mousemove',moveTip);hit.addEventListener('mouseleave',hideTip);
+      g.appendChild(hit);svg.appendChild(g);
+    });
+    svg.appendChild(el('line',{x1:x0,x2:x0,y1:0,y2:top+data.length*(bh+gap)-gap/2,class:'ax'}));
+    host.innerHTML='';host.appendChild(svg);
+  }
+
+  function drawAll(){
+  // 1. Embudo
+  var F=[['Vio un producto',61252,100,null],['Añadió al carrito',12052,19.7,19.7],['Inició el pago',4909,8.0,40.7],['Datos de envío',3061,5.0,62.4],['Datos de pago',2460,4.0,80.4],['Compró',1983,3.2,80.6]];
+  hbars(document.getElementById('funnel'),F.map(function(f){return {l:f[0],v:f[1],t:fmt(f[1])+'  ·  '+fmt(f[2],1)+' %',
+    tip:'<b>'+f[0]+'</b>'+fmt(f[1])+' personas<br>'+fmt(f[2],1)+' % de quienes vieron un producto'+(f[3]!=null?'<br>Pasa del paso anterior: '+fmt(f[3],1)+' %':'')}}),
+    {aria:'Embudo de compra: de 61 252 personas que vieron un producto, 19,7 % lo añadió al carrito y 3,2 % compró',labelW:130,valW:130,barH:22,gap:10});
+  document.getElementById('funnel-t').innerHTML=table(['Paso','Personas','% del inicio','% del paso anterior'],F.map(function(f){return [f[0],fmt(f[1]),fmt(f[2],1)+' %',f[3]==null?'—':fmt(f[3],1)+' %']}));
+
+  // 2. Dispositivos
+  var D=[['Computadora',208942,58.0,1.54],['Celular',143185,39.8,1.64],['Tablet',8002,2.2,1.39]];
+  var dtip=function(d){return '<b>'+d[0]+'</b>'+fmt(d[1])+' sesiones ('+fmt(d[2],1)+' %)<br>Conversión: '+fmt(d[3],2)+' %'};
+  hbars(document.getElementById('dev-share'),D.map(function(d){return {l:d[0],v:d[2],t:fmt(d[2],1)+' % de las sesiones',tip:dtip(d)}}),{aria:'Participación en sesiones por dispositivo',labelW:100,valW:150,max:100,width:520});
+  hbars(document.getElementById('dev-conv'),D.map(function(d){return {l:d[0],v:d[3],t:fmt(d[3],2)+' % convierte',tip:dtip(d)}}),{aria:'Conversión por dispositivo',labelW:100,valW:150,max:2,width:520});
+  document.getElementById('dev-t').innerHTML=table(['Dispositivo','Sesiones','% sesiones','Conversión'],D.map(function(d){return [d[0],fmt(d[1]),fmt(d[2],1)+' %',fmt(d[3],2)+' %']}));
+
+  }
+  drawAll();
+  // 3. Canales con selector de métrica
+  var C=[['Google orgánico',112678,1454,95775,31.3,1.29,65.9],['Directo',83459,1251,79650,23.2,1.50,63.7],['Sin dato (anonimizado)',74687,1445,85931,20.7,1.93,59.5],['Referidos de otros sitios',34675,557,37000,9.6,1.61,66.4],['Autorreferencia (la propia tienda)',28849,701,46521,8.0,2.43,66.4],['Anuncios de Google (cpc)',15618,166,9056,4.3,1.06,54.6],['Otros buscadores',10163,118,8232,2.8,1.16,69.8]];
+  var M={
+    sesiones:{i:1,title:'Google orgánico trae casi 1 de cada 3 visitas',q:'Sesiones por canal de adquisición',t:function(c){return fmt(c[1])+'  ·  '+fmt(c[4],1)+' %'},note:'<b>Más visitas no es más ventas:</b> cambia a "Conversión" para ver qué canales compran.'},
+    conversion:{i:5,title:'Los anuncios de Google son el canal que menos convierte',q:'% de sesiones que terminan en compra · línea punteada = promedio de la tienda (1.58 %)',t:function(c){return fmt(c[5],2)+' %'},ref:1.58,refLbl:'promedio 1.58 %',note:'<b>Google Ads convierte 1.06 %</b>, un tercio menos que el promedio. La autorreferencia "convierte" más porque es un error de medición: le roba el crédito a otros canales.'},
+    ingresos:{i:3,title:'Orgánico, anonimizado y directo suman casi 3/4 de los ingresos',q:'Ingresos por canal (USD)',t:function(c){return 'USD '+fmt(c[3]/1000,1)+' mil'},note:'<b>Los anuncios pagados aportan solo el 2.5 % de los ingresos</b> con el 4.3 % de las visitas.'},
+    ticket:{i:6,title:'El ticket de los anuncios es el más bajo',q:'Ingreso promedio por compra (USD)',t:function(c){return 'USD '+fmt(c[6],1)},note:'<b>Quien llega por anuncios compra menos:</b> USD 54.6 por pedido frente a USD 63.6 del promedio.'}
+  };
+  function drawCh(m){
+    var SH={'Google orgánico':'Orgánico','Sin dato (anonimizado)':'Sin dato','Referidos de otros sitios':'Referidos','Autorreferencia (la propia tienda)':'Autorref.','Anuncios de Google (cpc)':'Google Ads','Otros buscadores':'Otros busc.'};
+    var s=M[m],data=C.map(function(c){return {l:c[0],s:SH[c[0]],v:c[s.i],t:s.t(c),hi:c[0].indexOf('cpc')>-1&&(m==='conversion'||m==='ticket'),
+      tip:'<b>'+c[0]+'</b>'+fmt(c[1])+' sesiones ('+fmt(c[4],1)+' %)<br>'+fmt(c[2])+' compras · conversión '+fmt(c[5],2)+' %<br>Ingresos USD '+fmt(c[3])+' · ticket USD '+fmt(c[6],1)}}).sort(function(a,b){return b.v-a.v});
+    hbars(document.getElementById('channels'),data,{aria:s.title,labelW:230,valW:150,width:1100,barH:20,gap:10,ref:s.ref,refLbl:s.refLbl});
+    document.getElementById('ch-title').textContent=s.title;document.getElementById('ch-q').textContent=s.q;document.getElementById('ch-note').innerHTML=s.note;
+    document.querySelectorAll('.seg button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.m===m)});
+  }
+  document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){drawCh(b.dataset.m)})});
+  drawCh('sesiones');
+  document.getElementById('ch-t').innerHTML=table(['Canal','Sesiones','Compras','Conversión','Ingresos USD','Ticket USD'],C.map(function(c){return [c[0],fmt(c[1]),fmt(c[2]),fmt(c[5],2)+' %',fmt(c[3]),fmt(c[6],1)]}));
+
+  // 4. Cohortes (mapa de calor, azul secuencial)
+  var K=[['26 oct',1948,6.3,1.7,1.4,7.6],['2 nov',16496,9.3,2.0,2.9,12.1],['9 nov',14598,10.5,3.0,3.5,14.1],['16 nov',16901,10.7,3.1,3.6,14.5],['23 nov',18738,9.3,2.4,2.5,11.9],['30 nov',21192,9.9,2.6,1.7,12.1],['7 dic',27560,7.5,1.3,1.5,9.2],['14 dic',24216,6.8,1.2,1.9,8.6],['21 dic',17015,5.4,1.3,1.5,7.2],['28 dic',9834,5.1,1.2,1.3,6.7]];
+  var SEQ=['#cde2fb','#b7d3f6','#9ec5f4','#86b6ef','#6da7ec','#5598e7','#3987e5','#2a78d6','#256abf','#1c5cab','#184f95'];
+  function drawCohorts(){
+    var host=document.getElementById('cohorts');
+    var cell=function(v,max){var i=Math.min(SEQ.length-1,Math.round(v/max*(SEQ.length-1)));return 'background:'+SEQ[i]+';color:'+(i>=6?'#ffffff':'#0b0b0b');};
+    var html='<table class="heat"><thead><tr><th>Semana de inicio</th><th>Usuarios nuevos</th><th>Días 1–7</th><th>Días 8–14</th><th>Días 15–30</th><th>Total 30 días</th></tr></thead><tbody>';
+    K.forEach(function(k){html+='<tr><td>'+k[0]+'</td><td style="color:var(--ink-2)">'+fmt(k[1])+'</td>'+
+      [2,3,4].map(function(j){return '<td style="'+cell(k[j],11)+'" data-tip="<b>Cohorte '+k[0]+'</b>'+fmt(k[j],1)+' % volvió ('+['días 1–7','días 8–14','días 15–30'][j-2]+')">'+fmt(k[j],1)+' %</td>'}).join('')+
+      '<td style="'+cell(k[5],15)+';font-weight:650" data-tip="<b>Cohorte '+k[0]+'</b>'+fmt(k[1])+' usuarios nuevos<br>'+fmt(k[5],1)+' % volvió en 30 días">'+fmt(k[5],1)+' %</td></tr>';});
+    host.innerHTML=html+'</tbody></table>';
+    host.querySelectorAll('td[data-tip]').forEach(function(td){td.addEventListener('mouseenter',function(e){showTip(e,td.dataset.tip)});td.addEventListener('mousemove',moveTip);td.addEventListener('mouseleave',hideTip);});
+    document.getElementById('ramp').innerHTML=SEQ.filter(function(_,i){return i%2===0}).map(function(c){return '<i style="background:'+c+'"></i>'}).join('');
+  }
+  drawCohorts();
+  var cur='sesiones';document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){cur=b.dataset.m})});
+  var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){drawAll();drawCh(cur)},150)});
+})();
+</script>
+</body>
+</html>
